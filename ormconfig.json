@@ -1,0 +1,14 @@
+ {
+  "type": "postgres",
+  "host": "localhost",
+  "port": 5432,
+  "username": "postgres",
+  "password": "root",
+  "database": "exmo",
+  "entities": ["dist/**/*.entity{.ts,.js}"],
+  "migrations": ["dist/migration/*{.ts,.js}"],
+  "synchronize": false,
+  "cli": {
+    "migrationsDir": "src/migration"
+  }
+}
