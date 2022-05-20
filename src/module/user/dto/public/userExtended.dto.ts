@@ -1,4 +1,3 @@
-import { RoleDto } from '../../../role/dto/role.dto';
 import { UserEntity } from '../../user.entity';
 
 export class UserExtendedDto {
@@ -9,7 +8,6 @@ export class UserExtendedDto {
   phone: string;
   finCode: string;
   isActive: boolean;
-  roles: RoleDto[];
 
   public static fromEntity(entity: UserEntity): UserExtendedDto {
     if (!entity) return null;
@@ -21,7 +19,6 @@ export class UserExtendedDto {
     dto.phone = entity.phone;
     dto.finCode = entity.finCode;
     dto.isActive = entity.isActive;
-    dto.roles = Array.isArray(entity.roles) ? entity.roles.map(RoleDto.fromEntity) : [];
     return dto;
   }
 }
