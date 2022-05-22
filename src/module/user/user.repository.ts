@@ -10,6 +10,18 @@ export class UserRepository extends GenericRepository {
     super();
   }
 
+  async findByPhone(phoneNumber: string): Promise<UserEntity> {
+    if (!phoneNumber) return null;
+    return await this.runQuery(() =>
+      this.repository
+        .createQueryBuilder('user')
+        .where('user.phone_number = :phoneNumber', { phoneNumber })
+        .getOne(),
+    );
+  }
+
+  // not created
+
   async findExtendedById(id: number): Promise<UserEntity> {
     if (id !== 0 && !id) return null;
     return await this.runQuery(() =>
