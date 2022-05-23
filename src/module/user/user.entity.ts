@@ -42,7 +42,7 @@ export class UserEntity {
   @Column({ name: 'is_active' })
   isActive: boolean;
 
-  @Column({ name: 'blocked_list' })
+  @Column('text', { array: true, name: 'blocked_list' })
   blockedList: string[];
 
   @Column()

@@ -6,9 +6,16 @@ import { AuthModule } from './module/auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { PermissionsGuard } from './module/auth/decorator/permissions.guard';
 import { AuthMiddleware } from './module/auth/auth.middleware';
+import { VerificationModule } from './module/verification/verification.module';
 
 @Module({
-  imports: [ConfigModule.forRoot(), TypeOrmModule.forRoot(), AuthModule, UserModule],
+  imports: [
+    ConfigModule.forRoot(),
+    TypeOrmModule.forRoot(),
+    AuthModule,
+    UserModule,
+    VerificationModule,
+  ],
   providers: [{ provide: APP_GUARD, useClass: PermissionsGuard }],
 })
 export class AppModule implements NestModule {

@@ -7,12 +7,23 @@ import { Repository } from 'typeorm';
 @Injectable()
 export class VerificationRepository extends GenericRepository {
   constructor(
-    @InjectRepository(VerificationRepository) private repository: Repository<VerificationEntity>,
+    @InjectRepository(VerificationEntity) private repository: Repository<VerificationEntity>,
   ) {
     super();
   }
 
   async findByPhone(phoneNumber: string): Promise<VerificationEntity> {
-    return;
+    const id = 1;
+    return await this.runQuery(() => {
+      this.repository
+        .createQueryBuilder('verification')
+        .where('verification.phone_number = :phoneNumber', { phoneNumber })
+        .getOne();
+    });
+  }
+
+  async save(entity: VerificationEntity): Promise<VerificationEntity> {
+    if (!entity) return null;
+    return await this.runQuery(() => this.repository.save(entity));
   }
 }
