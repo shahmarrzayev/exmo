@@ -50,12 +50,9 @@ export class SaveUserDto {
   public static toEntity(dto: SaveUserDto, encPassword: string): UserEntity {
     if (!dto || !encPassword) return null;
     const entity = new UserEntity();
-    entity.email = dto.email;
-    entity.password = encPassword;
     entity.firstName = dto.firstName;
     entity.lastName = dto.lastName;
-    entity.phone = dto.phone;
-    entity.finCode = dto.finCode;
+    entity.phoneNumber = dto.phone;
     entity.isActive = dto.isActive;
     return entity;
   }

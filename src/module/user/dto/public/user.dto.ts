@@ -12,10 +12,8 @@ export class UserDto {
     if (!entity) return null;
     const dto = new UserDto();
     dto.id = entity.id;
-    dto.email = entity.email;
     dto.firstName = entity.firstName;
     dto.lastName = entity.lastName;
-    dto.phone = entity.phone;
     dto.isActive = entity.isActive;
     return dto;
   }
