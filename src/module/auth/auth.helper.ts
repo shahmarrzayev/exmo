@@ -22,4 +22,8 @@ export class AuthHelper {
     this.logger.debug('verifyPassword -- success');
     return isCorrectPassword;
   }
+
+  generateCode(): string {
+    return Math.floor(Math.random() * (1e6 - 111111) + 111111).toString();
+  }
 }

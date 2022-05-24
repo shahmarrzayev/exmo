@@ -1,6 +1,4 @@
-import { AuthHelper } from './auth.helper';
 import { JwtService } from '@nestjs/jwt';
-import { RoleService } from '../role/service/role.service';
 import { UserService } from '../user/user.service';
 import {
   Injectable,
@@ -8,55 +6,88 @@ import {
   Logger,
   UnauthorizedException,
 } from '@nestjs/common';
-import { UserEntity } from '../user/user.entity';
+
 import { getConfig } from '../../common/util';
 import { EConfig } from '../../common/config.enum';
+import { AuthHelper } from './auth.helper';
+import { AuthDto } from './dto/auth.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly authHelper: AuthHelper,
     private readonly jwtService: JwtService,
-    private readonly roleService: RoleService,
     private readonly userService: UserService,
+    private readonly authHelper: AuthHelper,
   ) {}
 
-  private readonly logger = new Logger(AuthService.name);
+  private readonly log = new Logger(AuthService.name);
 
-  async login(user: any): Promise<{ access_token: string }> {
-    if (!user || !user.isActive) {
-      this.logger.debug('login -- user is not active');
-      throw new UnauthorizedException();
-    }
-
-    const payload = { id: user.id, email: user.email, isActive: user.isActive };
-    const accessToken = this.jwtService.sign(payload, {
-      secret: getConfig(EConfig.DOCTORO_JWT_ACCESS_SECRET_KEY),
-    });
-    this.logger.debug('login -- success');
-    return { access_token: accessToken };
-  }
-
-  async validateUser(email: string, password: string): Promise<UserEntity> {
-    this.logger.debug('validateUser -- start');
-    if (!email || !password) {
-      this.logger.warn('validateUser -- null param');
+  async sendVerificationCode(phoneNumber: string): Promise<AuthDto> {
+    this.log.debug('sendVerificationCode -- start');
+    if (!phoneNumber) {
+      this.log.debug('sendVerificationCode -- invalid argument(s)');
       throw new InternalServerErrorException();
     }
 
-    let user: UserEntity;
-    try {
-      user = await this.userService.getByEmail(email);
-    } catch (error) {
-      return null;
+    const verificationCode = this.authHelper.generateCode();
+    const verificationCodeExpDate = new Date(
+      Date.now() + getConfig(EConfig.VERIFICATION_CODE_EXPIRATION_TIME) * 1000,
+    );
+
+    let user = await this.userService.getByPhone(phoneNumber);
+    if (user) {
+      user.verificationCode = verificationCode;
+      user.verificationCodeExpDate = verificationCodeExpDate;
+    } else {
+      user = .toEntity(dto, code, expirationDate);
     }
 
-    const correctPassword = await this.authHelper.verifyPassword(user.password, password);
-    if (!correctPassword) {
-      this.logger.warn('validateUser -- wrong password');
-      throw new UnauthorizedException('Wrong email or password');
+    const savedUser = await this.userService.update(user);
+
+    if (!savedUser) {
+      this.log.warn('sendVerificationCode -- could not save user');
+      throw new InternalServerErrorException();
     }
-    this.logger.debug('validateUser -- success');
-    return user;
+
+    this.log.debug('sendVerificationCode -- success');
+    return savedUser;
   }
+
+  async login(phoneNumber: string): Promise<{ access_token: string }> {
+    const user = await this.userService.getByPhone(phoneNumber);
+    if (!user || !user.isActive) {
+      this.log.debug('login -- user is not active');
+      throw new UnauthorizedException();
+    }
+
+    const payload = { id: user.id, phoneNumber: user.phoneNumber, isActive: user.isActive };
+    const accessToken = this.jwtService.sign(payload, {
+      secret: getConfig(EConfig.DOCTORO_JWT_ACCESS_SECRET_KEY),
+    });
+    this.log.debug('login -- success');
+    return { access_token: accessToken };
+  }
+
+  // async validateUser(email: string, password: string): Promise<UserEntity> {
+  //   this.log.debug('validateUser -- start');
+  //   if (!email || !password) {
+  //     this.log.warn('validateUser -- null param');
+  //     throw new InternalServerErrorException();
+  //   }
+
+  //   let user: UserEntity;
+  //   try {
+  //     user = await this.userService.getByEmail(email);
+  //   } catch (error) {
+  //     return null;
+  //   }
+
+  //   const correctPassword = await this.authHelper.verifyPassword(user.password, password);
+  //   if (!correctPassword) {
+  //     this.log.warn('validateUser -- wrong password');
+  //     throw new UnauthorizedException('Wrong email or password');
+  //   }
+  //   this.log.debug('validateUser -- success');
+  //   return user;
+  // }
 }

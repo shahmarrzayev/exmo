@@ -17,7 +17,7 @@ export class AuthMiddleware implements NestMiddleware {
     const bearerHeader = req.headers.authorization;
     const accessToken = bearerHeader && bearerHeader.split(' ')[1];
     if (!bearerHeader || !accessToken) {
-      this.logger.warn('no token');
+      this.logger.warn('use -- no token');
       return next();
     }
 

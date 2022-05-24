@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { GenericRepository } from '../../common/repository';
 import { UserEntity } from './user.entity';
-import { FindUsersFilterDto } from './dto/findUsersFilter.dto';
 
 @Injectable()
 export class UserRepository extends GenericRepository {
@@ -11,30 +10,17 @@ export class UserRepository extends GenericRepository {
     super();
   }
 
-  async findAll(filter: FindUsersFilterDto): Promise<UserEntity[]> {
+  async findByPhone(phoneNumber: string): Promise<UserEntity> {
+    if (!phoneNumber) return null;
     return await this.runQuery(() =>
       this.repository
         .createQueryBuilder('user')
-        .leftJoinAndSelect('user.roles', 'role')
-        .leftJoinAndSelect('role.permissions', 'permission')
-        .where(filter.email ? 'user.email = :email' : 'TRUE', { email: filter.email })
-        .andWhere(filter.firstName ? 'user.firstName = :firstName' : 'TRUE', {
-          firstName: filter.firstName,
-        })
-        .andWhere(filter.lastName ? 'user.lastName = :lastName' : 'TRUE', {
-          lastName: filter.lastName,
-        })
-        .andWhere(filter.finCode ? 'user.finCode = :finCode' : 'TRUE', {
-          finCode: filter.finCode,
-        })
-        .andWhere(filter.isActive ? 'user.isActive = :isActive' : 'TRUE', {
-          isActive: filter.isActive,
-        })
-        .skip(this.getSkip(filter.page, filter.perPage))
-        .take(filter.perPage || 10)
-        .getMany(),
+        .where('user.phone_number = :phoneNumber', { phoneNumber })
+        .getOne(),
     );
   }
+
+  // not created
 
   async findExtendedById(id: number): Promise<UserEntity> {
     if (id !== 0 && !id) return null;
