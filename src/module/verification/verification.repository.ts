@@ -13,13 +13,13 @@ export class VerificationRepository extends GenericRepository {
   }
 
   async findByPhone(phoneNumber: string): Promise<VerificationEntity> {
-    const id = 1;
-    return await this.runQuery(() => {
+    if (!phoneNumber) return null;
+    return await this.runQuery(() =>
       this.repository
         .createQueryBuilder('verification')
         .where('verification.phone_number = :phoneNumber', { phoneNumber })
-        .getOne();
-    });
+        .getOne(),
+    );
   }
 
   async save(entity: VerificationEntity): Promise<VerificationEntity> {

@@ -20,12 +20,12 @@ export class UserService {
 
   async getByPhone(phoneNumber): Promise<UserEntity> {
     if (!phoneNumber) {
-      this.log.warn('getByEmail -- invalid argument(s)');
+      this.log.warn('getByPhone -- invalid argument(s)');
       throw new InternalServerErrorException();
     }
     const user = await this.userRepository.findByPhone(phoneNumber);
     if (!user) {
-      this.log.debug('getByEmail -- user not found');
+      this.log.debug('getByPhone -- user not found');
       throw new NotFoundException();
     }
     return user;

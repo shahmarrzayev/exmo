@@ -10,7 +10,7 @@ import {
   Logger,
   UnauthorizedException,
 } from '@nestjs/common';
-import { checkVerificationCodeDto } from './dto/checkVerificationCode.dto';
+import { CheckVerificationCodeDto } from './dto/checkVerificationCode.dto';
 import { AuthService } from '../auth/auth.service';
 
 @Injectable()
@@ -37,7 +37,6 @@ export class VerificationService {
     );
 
     let verification = await this.verificationRepository.findByPhone(phoneNumber);
-    console.log(verification);
     if (verification) {
       verification.code = code;
       verification.expirationDate = expirationDate;
@@ -55,7 +54,7 @@ export class VerificationService {
     return savedVerification;
   }
 
-  async checkVerificationCode(dto: checkVerificationCodeDto): Promise<{ access_token: string }> {
+  async checkVerificationCode(dto: CheckVerificationCodeDto): Promise<{ access_token: string }> {
     this.log.debug('checkVerificationCode -- start');
     const { phoneNumber, code } = dto || {};
     if (!phoneNumber || !code) {
