@@ -6,8 +6,8 @@ import { AuthModule } from './module/auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { PermissionsGuard } from './module/auth/decorator/permissions.guard';
 import { AuthMiddleware } from './module/auth/auth.middleware';
-import { VerificationModule } from './module/verification/verification.module';
-import { TwilioModule } from 'nestjs-twilio';
+// import { VerificationModule } from './module/verification/verification.module';
+// import { TwilioModule } from 'nestjs-twilio';
 
 @Module({
   imports: [
@@ -15,7 +15,7 @@ import { TwilioModule } from 'nestjs-twilio';
     TypeOrmModule.forRoot(),
     AuthModule,
     UserModule,
-    VerificationModule,
+    // VerificationModule,
     // TwilioModule.forRoot({
     //   accountSid: 'AC54e4db69a9747c37bf4a54b5f4467bf5',
     //   authToken: '8ec161fcffb030335119ad4934a2a947',

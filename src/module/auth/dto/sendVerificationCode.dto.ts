@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsPhoneNumber } from 'class-validator';
 
-export class SendVerificationCode {
+export class SendVerificationCodeDto {
   @IsNotEmpty()
   @IsPhoneNumber()
   phoneNumber: string;

@@ -4,10 +4,10 @@
   "port": 5432,
   "username": "postgres",
   "password": "root",
-  "database": "exmo",
+  "database": "exmo2",
   "entities": ["dist/**/*.entity{.ts,.js}"],
   "migrations": ["dist/migration/*{.ts,.js}"],
-  "synchronize": true,
+  "synchronize": false,
   "cli": {
     "migrationsDir": "src/migration"
   }
