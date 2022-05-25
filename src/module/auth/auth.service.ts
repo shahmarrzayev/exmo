@@ -10,7 +10,6 @@ import {
 import { getConfig } from '../../common/util';
 import { EConfig } from '../../common/config.enum';
 import { AuthHelper } from './auth.helper';
-import { AuthDto } from './dto/auth.dto';
 
 @Injectable()
 export class AuthService {
@@ -22,7 +21,7 @@ export class AuthService {
 
   private readonly log = new Logger(AuthService.name);
 
-  async sendVerificationCode(phoneNumber: string): Promise<AuthDto> {
+  async sendVerificationCode(phoneNumber: string): Promise<any> {
     this.log.debug('sendVerificationCode -- start');
     if (!phoneNumber) {
       this.log.debug('sendVerificationCode -- invalid argument(s)');
@@ -34,23 +33,17 @@ export class AuthService {
       Date.now() + getConfig(EConfig.VERIFICATION_CODE_EXPIRATION_TIME) * 1000,
     );
 
-    let user = await this.userService.getByPhone(phoneNumber);
-    if (user) {
-      user.verificationCode = verificationCode;
-      user.verificationCodeExpDate = verificationCodeExpDate;
-    } else {
-      user = .toEntity(dto, code, expirationDate);
-    }
-
-    const savedUser = await this.userService.update(user);
-
+    const savedUser = await this.userService.save(
+      phoneNumber,
+      verificationCode,
+      verificationCodeExpDate,
+    );
     if (!savedUser) {
       this.log.warn('sendVerificationCode -- could not save user');
       throw new InternalServerErrorException();
     }
-
     this.log.debug('sendVerificationCode -- success');
-    return savedUser;
+    return { verificationCodeExpDate };
   }
 
   async login(phoneNumber: string): Promise<{ access_token: string }> {

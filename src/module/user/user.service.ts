@@ -18,7 +18,30 @@ export class UserService {
 
   private readonly log = new Logger(UserService.name);
 
-  async getByPhone(phoneNumber): Promise<UserEntity> {
+  async save(
+    phoneNumber: string,
+    verificationCode: string,
+    verificationCodeExpDate: Date,
+  ): Promise<UserEntity> {
+    this.log.debug('save -- start');
+    if (!phoneNumber || !verificationCode || !verificationCodeExpDate) {
+      this.log.warn('save -- invalid argument(s)');
+      throw new InternalServerErrorException();
+    }
+
+    let entity = await this.userRepository.findByPhone(phoneNumber);
+    entity = { ...entity, phoneNumber, verificationCode, verificationCodeExpDate };
+
+    const savedUser = await this.userRepository.save(entity);
+    if (!savedUser) {
+      this.log.debug('save -- could not save user');
+      throw new InternalServerErrorException();
+    }
+    this.log.debug('save -- success');
+    return savedUser;
+  }
+
+  async getByPhone(phoneNumber: string): Promise<UserEntity> {
     if (!phoneNumber) {
       this.log.warn('getByPhone -- invalid argument(s)');
       throw new InternalServerErrorException();

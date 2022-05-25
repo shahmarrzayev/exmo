@@ -13,7 +13,7 @@ export class UserEntity {
   id?: number;
 
   @Column({ name: 'first_name' })
-  firstName: string;
+  firstName?: null | string;
 
   @Column({ name: 'last_name' })
   lastName: string;
@@ -49,7 +49,7 @@ export class UserEntity {
   image: string;
 
   @Column()
-  refferalCode: string;
+  refferalCode?: string;
 
   @Column({ name: 'verification_code' })
   verificationCode: string;
