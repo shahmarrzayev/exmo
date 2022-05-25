@@ -1,4 +1,4 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 
@@ -9,7 +9,6 @@ import { AuthService } from './auth.service';
 import { UserModule } from '../user/user.module';
 import { getConfig } from '../../common/util';
 import { EConfig } from '../../common/config.enum';
-import { VerificationModule } from '../verification/verification.module';
 
 @Module({
   controllers: [AuthController],
@@ -17,7 +16,7 @@ import { VerificationModule } from '../verification/verification.module';
     ConfigModule,
     UserModule,
     JwtModule.register({
-      secret: getConfig(EConfig.DOCTORO_JWT_ACCESS_SECRET_KEY),
+      secret: getConfig(EConfig.EXMO_JWT_ACCESS_SECRET_KEY),
       signOptions: { expiresIn: '86400s' },
     }),
   ],

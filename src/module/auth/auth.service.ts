@@ -46,41 +46,25 @@ export class AuthService {
     return { verificationCodeExpDate };
   }
 
-  async login(phoneNumber: string): Promise<{ access_token: string }> {
+  async login(phoneNumber: string, verificationCode: string): Promise<{ access_token: string }> {
+    this.log.debug('login -- start');
     const user = await this.userService.getByPhone(phoneNumber);
     if (!user || !user.isActive) {
       this.log.debug('login -- user is not active');
       throw new UnauthorizedException();
     }
 
+    const nowDate = new Date(Date.now());
+    if (verificationCode != user.verificationCode || nowDate > user.verificationCodeExpDate) {
+      this.log.debug('login -- verification code is not correct or has expired');
+      throw new UnauthorizedException();
+    }
+
     const payload = { id: user.id, phoneNumber: user.phoneNumber, isActive: user.isActive };
     const accessToken = this.jwtService.sign(payload, {
-      secret: getConfig(EConfig.DOCTORO_JWT_ACCESS_SECRET_KEY),
+      secret: getConfig(EConfig.EXMO_JWT_ACCESS_SECRET_KEY),
     });
     this.log.debug('login -- success');
     return { access_token: accessToken };
   }
-
-  // async validateUser(email: string, password: string): Promise<UserEntity> {
-  //   this.log.debug('validateUser -- start');
-  //   if (!email || !password) {
-  //     this.log.warn('validateUser -- null param');
-  //     throw new InternalServerErrorException();
-  //   }
-
-  //   let user: UserEntity;
-  //   try {
-  //     user = await this.userService.getByEmail(email);
-  //   } catch (error) {
-  //     return null;
-  //   }
-
-  //   const correctPassword = await this.authHelper.verifyPassword(user.password, password);
-  //   if (!correctPassword) {
-  //     this.log.warn('validateUser -- wrong password');
-  //     throw new UnauthorizedException('Wrong email or password');
-  //   }
-  //   this.log.debug('validateUser -- success');
-  //   return user;
-  // }
 }
