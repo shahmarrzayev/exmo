@@ -8,6 +8,7 @@ import { UserRepository } from './user.repository';
 
 import { UserHelper } from './user.helper';
 import { UserEntity } from './user.entity';
+import { SaveUserDto } from './dto/saveUser.dto';
 
 @Injectable()
 export class UserService {
@@ -66,6 +67,8 @@ export class UserService {
     }
     return user;
   }
+
+  async update(dto: SaveUserDto): Promise<UserEntity> {}
 }
 
 // 123456

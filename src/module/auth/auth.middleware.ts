@@ -23,7 +23,7 @@ export class AuthMiddleware implements NestMiddleware {
 
     let user: UserEntity;
     try {
-      const { id }: any = verify(accessToken, getConfig(EConfig.DOCTORO_JWT_ACCESS_SECRET_KEY));
+      const { id }: any = verify(accessToken, getConfig(EConfig.EXMO_JWT_ACCESS_SECRET_KEY));
       user = await this.userService.getById(id);
     } catch (error) {
       this.logger.error(`${JSON.stringify(error)}`);
