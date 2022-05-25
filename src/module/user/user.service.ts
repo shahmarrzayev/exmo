@@ -68,7 +68,13 @@ export class UserService {
     return user;
   }
 
-  async update(dto: SaveUserDto): Promise<UserEntity> {}
+  async update(dto: SaveUserDto): Promise<UserEntity> {
+    this.log.debug('update -- start');
+    if (!dto) {
+      this.log.debug('');
+    }
+    this.log.debug('update -- success');
+  }
 }
 
 // 123456
