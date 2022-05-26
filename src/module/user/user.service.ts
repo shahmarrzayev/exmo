@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   Injectable,
   InternalServerErrorException,
   Logger,
@@ -60,7 +61,7 @@ export class UserService {
       this.log.warn('getById -- invalid argument(s)');
       throw new InternalServerErrorException();
     }
-    const user = await this.userRepository.findExtendedById(id);
+    const user = await this.userRepository.findById(id);
     if (!user) {
       this.log.debug('getById -- user not found');
       throw new NotFoundException();
@@ -68,12 +69,42 @@ export class UserService {
     return user;
   }
 
-  async update(dto: SaveUserDto): Promise<UserEntity> {
+  async update(id: number, dto: SaveUserDto): Promise<UserEntity> {
     this.log.debug('update -- start');
     if (!dto) {
-      this.log.debug('');
+      this.log.debug('update -- invalid argument(s)');
+      throw new InternalServerErrorException();
+    }
+
+    const user = await this.userRepository.findById(id);
+    if (!user) {
+      this.log.debug('update -- user not found');
+      throw new NotFoundException('User not found');
+    }
+
+    if (user.username !== dto.username && (await this.usernameExists(dto.username))) {
+      this.log.debug('update -- username already in use');
+      throw new ConflictException('Username already in use');
+    }
+
+    if (user.refferalCode && dto.refferalCode) {
+      this.log.debug('update -- refferal code exist, cannot be changed');
+      throw new ConflictException('Refferal code exists');
+    }
+
+    let updatedEntity = { ...user, ...SaveUserDto.toEntity(dto) };
+    updatedEntity = await this.userRepository.save(updatedEntity);
+    if (!updatedEntity) {
+      this.log.warn('update -- could not save user');
+      throw new InternalServerErrorException('Could not update user');
     }
     this.log.debug('update -- success');
+    return updatedEntity;
+  }
+
+  async usernameExists(username: string): Promise<boolean> {
+    const exists = await this.userRepository.findByUsername(username);
+    return !!exists;
   }
 }
 
