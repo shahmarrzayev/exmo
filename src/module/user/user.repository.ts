@@ -10,6 +10,13 @@ export class UserRepository extends GenericRepository {
     super();
   }
 
+  async findById(id: number): Promise<UserEntity> {
+    if (!id) return null;
+    return await this.runQuery(() =>
+      this.repository.createQueryBuilder('user').where('user.id = :id', { id }).getOne(),
+    );
+  }
+
   async findByPhone(phoneNumber: string): Promise<UserEntity> {
     if (!phoneNumber) return null;
     return await this.runQuery(() =>
@@ -20,36 +27,13 @@ export class UserRepository extends GenericRepository {
     );
   }
 
-  // not created
-
-  async findExtendedById(id: number): Promise<UserEntity> {
-    if (id !== 0 && !id) return null;
+  async findByUsername(username: string): Promise<UserEntity> {
+    if (!username) return null;
     return await this.runQuery(() =>
       this.repository
         .createQueryBuilder('user')
-        .leftJoinAndSelect('user.organization', 'organization')
-        .leftJoinAndSelect('user.roles', 'role')
-        .leftJoinAndSelect('role.permissions', 'permission')
-        .where('user.id = :id', { id })
+        .where('user.username = :username', { username })
         .getOne(),
-    );
-  }
-
-  async findByEmail(email: string): Promise<UserEntity> {
-    if (!email) return null;
-    return await this.runQuery(() =>
-      this.repository.createQueryBuilder('user').where('user.email = :email', { email }).getOne(),
-    );
-  }
-
-  async findManyByOrganizationId(id: number): Promise<UserEntity[]> {
-    if (id !== 0 && !id) return null;
-    return await this.runQuery(() =>
-      this.repository
-        .createQueryBuilder('user')
-        .leftJoinAndSelect('user.organization', 'organization')
-        .where('organization.id = :id', { id })
-        .getMany(),
     );
   }
 
