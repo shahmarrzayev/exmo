@@ -53,7 +53,7 @@ $ npm run test:cov
 ## Database migrations
 To create a migration:
 ```bash
-npm run typeorm migration:create -n ExampleMigrationName
+npx typeorm migration:create -n ExampleMigrationName
 ```
 
 To migrate:

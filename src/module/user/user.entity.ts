@@ -3,9 +3,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { RoleEntity } from '../role/entity/role.entity';
 
 @Entity('users')
 export class UserEntity {
@@ -39,7 +42,7 @@ export class UserEntity {
   @Column()
   longitude: number;
 
-  @Column({ name: 'is_active' })
+  @Column({ name: 'is_active', default: true })
   isActive: boolean;
 
   @Column('text', { array: true, name: 'blocked_list' })
@@ -56,6 +59,14 @@ export class UserEntity {
 
   @Column({ name: 'verification_code_exp_date' })
   verificationCodeExpDate: Date;
+
+  @ManyToMany(() => RoleEntity, { eager: true })
+  @JoinTable({
+    name: 'users_roles',
+    joinColumn: { name: 'user_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'role_id', referencedColumnName: 'id' },
+  })
+  roles?: RoleEntity[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt?: Date;
