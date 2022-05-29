@@ -17,7 +17,7 @@ import { EConfig } from '../../common/config.enum';
     UserModule,
     JwtModule.register({
       secret: getConfig(EConfig.EXMO_JWT_ACCESS_SECRET_KEY),
-      signOptions: { expiresIn: '86400s' },
+      signOptions: { expiresIn: '210h' },
     }),
   ],
   providers: [AuthHelper, AuthService],
