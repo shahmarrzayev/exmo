@@ -1,13 +1,13 @@
  {
   "type": "postgres",
-  "host": "localhost",
+  "host": "exmo-db.cezq3ilbquq6.us-east-1.rds.amazonaws.com",
   "port": 5432,
-  "username": "postgres",
-  "password": "root",
-  "database": "exmo",
+  "username": "exmo",
+  "password": "exmoexmo",
+  "database": "exmo_db",
   "entities": ["dist/**/*.entity{.ts,.js}"],
   "migrations": ["dist/migration/*{.ts,.js}"],
-  "synchronize": false,
+  "synchronize": true,
   "cli": {
     "migrationsDir": "src/migration"
   }
