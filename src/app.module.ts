@@ -7,10 +7,12 @@ import { APP_GUARD } from '@nestjs/core';
 import { PermissionsGuard } from './module/auth/decorator/permissions.guard';
 import { AuthMiddleware } from './module/auth/auth.middleware';
 import { RoleModule } from './module/role/role.module';
+import AppController from './app.controller';
 // import { VerificationModule } from './module/verification/verification.module';
 // import { TwilioModule } from 'nestjs-twilio';
 
 @Module({
+  controllers: [AppController],
   imports: [
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot(),
