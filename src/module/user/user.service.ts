@@ -69,7 +69,7 @@ export class UserService {
     return user;
   }
 
-  async update(id: number, dto: SaveUserDto): Promise<UserEntity> {
+  async update(id: number, dto: SaveUserDto): Promise<any> {
     this.log.debug('update -- start');
     if (!dto) {
       this.log.debug('update -- invalid argument(s)');
