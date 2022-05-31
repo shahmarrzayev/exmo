@@ -1,3 +1,4 @@
+import { FileModule } from './module/file/file.module';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './module/user/user.module';
@@ -7,12 +8,10 @@ import { APP_GUARD } from '@nestjs/core';
 import { PermissionsGuard } from './module/auth/decorator/permissions.guard';
 import { AuthMiddleware } from './module/auth/auth.middleware';
 import { RoleModule } from './module/role/role.module';
-import AppController from './app.controller';
 // import { VerificationModule } from './module/verification/verification.module';
 // import { TwilioModule } from 'nestjs-twilio';
 
 @Module({
-  controllers: [AppController],
   imports: [
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot(),
