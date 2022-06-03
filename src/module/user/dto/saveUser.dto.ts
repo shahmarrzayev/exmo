@@ -1,4 +1,12 @@
-import { IsEnum, IsNotEmpty, IsOptional, IsPhoneNumber, IsString } from 'class-validator';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsPhoneNumber,
+  IsString,
+  IsArray,
+  IsInt,
+} from 'class-validator';
 import { UserEntity } from '../user.entity';
 import { EGender } from '../user.enum';
 
@@ -34,6 +42,11 @@ export class SaveUserDto {
   @IsNotEmpty()
   @IsString()
   birthDate: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsInt({ each: true })
+  roleIds: number[];
 
   public static toEntity(dto: SaveUserDto): UserEntity {
     const entity = new UserEntity();

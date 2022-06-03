@@ -92,6 +92,8 @@ export class UserService {
       throw new ConflictException('Refferal code exists');
     }
 
+    // user.roles = dto.roleIds;
+
     let updatedEntity = { ...user, ...SaveUserDto.toEntity(dto) };
     updatedEntity = await this.userRepository.save(updatedEntity);
     if (!updatedEntity) {

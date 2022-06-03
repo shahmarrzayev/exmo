@@ -1,38 +1,19 @@
-import { S3 } from 'aws-sdk';
 import { Logger, Injectable, InternalServerErrorException } from '@nestjs/common';
-import { EConfig } from 'src/common/config.enum';
-import { getConfig } from 'src/common/util';
+import { S3Service } from 'src/providers/s3/s3.service';
 
 @Injectable()
 export class FileService {
-  constructor() {}
+  constructor(private readonly s3Service: S3Service) {}
 
   private readonly log = new Logger(FileService.name);
 
-  async uploadFile(file: Express.Multer.File) {
-    this.log.debug('uploadFile -- start');
-    if (!file || !file.originalname) {
-      this.log.debug('uploadFile -- ');
+  async upload(file: Express.Multer.File): Promise<{ url: string }> {
+    this.log.debug('upload -- start');
+    if (!file) {
+      this.log.debug('upload -- invalid argument(s)');
       throw new InternalServerErrorException();
     }
-
-    let result;
-    try {
-      const s3 = new S3({
-        accessKeyId: getConfig(EConfig.S3_ACCESS_KEY_ID),
-        secretAccessKey: getConfig(EConfig.S3_SECRET_ACCESS_KEY),
-      });
-
-      result = s3.upload({
-        Bucket: getConfig(EConfig.S3_BUCKET_NAME),
-        Key: file.originalname,
-        Body: file,
-      });
-    } catch (err) {
-      this.log.error(err);
-      throw new InternalServerErrorException();
-    }
-    this.log.debug('uploadFile -- success');
-    return result;
+    this.log.debug('upload -- success');
+    return await this.s3Service.upload(file);
   }
 }

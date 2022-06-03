@@ -10,7 +10,7 @@ export class RoleController {
   constructor(private readonly roleService: RoleService) {}
 
   @Post()
-  // @Permissions(EPermission.ROLE_WRITE)
+  @Permissions(EPermission.ROLE_WRITE)
   async create(@Body() dto: SaveRoleDto): Promise<RoleDto> {
     const role = await this.roleService.create(dto);
     return RoleDto.fromEntity(role);

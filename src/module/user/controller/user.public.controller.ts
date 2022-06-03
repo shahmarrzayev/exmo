@@ -10,7 +10,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post('/:id')
-  // @Permissions(EPermission.USER_WRITE)
+  @Permissions(EPermission.USER_WRITE)
   async update(@Param('id') id: string, @Body() dto: SaveUserDto): Promise<UserDto> {
     const user = await this.userService.update(parseInt(id), dto);
     return UserDto.fromEntity(user);

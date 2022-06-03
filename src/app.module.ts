@@ -8,7 +8,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { PermissionsGuard } from './module/auth/decorator/permissions.guard';
 import { AuthMiddleware } from './module/auth/auth.middleware';
 import { RoleModule } from './module/role/role.module';
-// import { VerificationModule } from './module/verification/verification.module';
+import { S3Service } from './providers/s3/s3.service';
 // import { TwilioModule } from 'nestjs-twilio';
 
 @Module({
@@ -18,7 +18,8 @@ import { RoleModule } from './module/role/role.module';
     AuthModule,
     UserModule,
     RoleModule,
-    // VerificationModule,
+    FileModule,
+    S3Service,
     // TwilioModule.forRoot({
     //   accountSid: 'AC54e4db69a9747c37bf4a54b5f4467bf5',
     //   authToken: '8ec161fcffb030335119ad4934a2a947',
