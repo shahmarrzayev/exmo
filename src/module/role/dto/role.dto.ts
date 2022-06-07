@@ -12,7 +12,9 @@ export class RoleDto {
     const dto = new RoleDto();
     dto.id = entity.id;
     dto.title = entity.title;
-    dto.permissions = Array.isArray(entity.permissions) ? entity.permissions.map(PermissionDto.fromEntity) : [];
+    dto.permissions = Array.isArray(entity.permissions)
+      ? entity.permissions.map(PermissionDto.fromEntity)
+      : [];
     return dto;
   }
 }

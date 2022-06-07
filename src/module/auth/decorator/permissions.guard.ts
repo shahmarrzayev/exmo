@@ -30,8 +30,6 @@ export class PermissionsGuard implements CanActivate {
       throw new ForbiddenException();
     }
 
-    console.log('\n\nuser.roles -- ', user.roles, '\n\n');
-
     const userPermissions = user.roles.flatMap((r) => (r ? r.permissions : [])).map((p) => p.title);
     if (!userPermissions || !userPermissions.length) {
       this.log.warn('canActive -- user does not have permissions');

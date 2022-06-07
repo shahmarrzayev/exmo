@@ -17,7 +17,7 @@ export class RoleController {
   }
 
   @Get()
-  @Permissions(EPermission.ROLE_READ)
+  // @Permissions(EPermission.ROLE_READ)
   async getAll(): Promise<RoleDto[]> {
     const roles = await this.roleService.getAll();
     return roles.map(RoleDto.fromEntity);

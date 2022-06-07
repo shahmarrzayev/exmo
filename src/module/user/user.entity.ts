@@ -45,8 +45,11 @@ export class UserEntity {
   @Column({ name: 'is_active', default: true })
   isActive: boolean;
 
-  @Column('text', { array: true, name: 'blocked_list' })
-  blockedList: string[];
+  @Column({ name: 'is_user', default: true })
+  isUser: boolean;
+
+  @Column('int', { array: true, name: 'blocked_list' })
+  blockedList: number[];
 
   @Column()
   image: string;

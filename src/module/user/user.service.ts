@@ -88,13 +88,12 @@ export class UserService {
     }
 
     if (user.refferalCode && dto.refferalCode) {
-      this.log.debug('update -- refferal code exist, cannot be changed');
+      this.log.debug('update -- refferal code exists, cannot be changed');
       throw new ConflictException('Refferal code exists');
     }
 
-    // user.roles = dto.roleIds;
-
     let updatedEntity = { ...user, ...SaveUserDto.toEntity(dto) };
+    console.log(updatedEntity.birthDate);
     updatedEntity = await this.userRepository.save(updatedEntity);
     if (!updatedEntity) {
       this.log.warn('update -- could not save user');
