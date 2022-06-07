@@ -1,3 +1,4 @@
+import { AuthHelper } from './auth.helper';
 import { ForbiddenException, Injectable, Logger, NestMiddleware } from '@nestjs/common';
 import { verify } from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
@@ -8,7 +9,7 @@ import { EConfig } from '../../common/config.enum';
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService, private readonly authHelper: AuthHelper) {}
 
   private readonly logger = new Logger(AuthMiddleware.name);
 
@@ -31,6 +32,9 @@ export class AuthMiddleware implements NestMiddleware {
     }
 
     if (user && user.isActive) {
+      if (user.isUser) {
+        user.roles = this.authHelper.userPermissions();
+      }
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       req.user = user;

@@ -10,7 +10,7 @@ export class UserDto {
   birthDate: Date;
   lastSeen: Date;
   gender: EGender;
-  blockedList: string[];
+  blockedList: number[];
   image: string;
   refferalCode: string;
 

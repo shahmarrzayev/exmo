@@ -1,12 +1,4 @@
-import {
-  IsEnum,
-  IsNotEmpty,
-  IsOptional,
-  IsPhoneNumber,
-  IsString,
-  IsArray,
-  IsInt,
-} from 'class-validator';
+import { IsEnum, IsNotEmpty, IsOptional, IsPhoneNumber, IsString } from 'class-validator';
 import { UserEntity } from '../user.entity';
 import { EGender } from '../user.enum';
 
@@ -44,9 +36,8 @@ export class SaveUserDto {
   birthDate: string;
 
   @IsOptional()
-  @IsArray()
-  @IsInt({ each: true })
-  roleIds: number[];
+  @IsString()
+  lastSeen?: string;
 
   public static toEntity(dto: SaveUserDto): UserEntity {
     const entity = new UserEntity();
@@ -57,7 +48,8 @@ export class SaveUserDto {
     entity.gender = dto.gender;
     entity.image = dto.image;
     entity.refferalCode = dto.refferalCode;
-    entity.birthDate = new Date(dto.birthDate);
+    entity.birthDate = dto.birthDate ? new Date(dto.birthDate) : null;
+    entity.lastSeen = dto.lastSeen ? new Date(dto.lastSeen) : null;
     return entity;
   }
 }

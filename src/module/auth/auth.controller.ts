@@ -10,7 +10,7 @@ export class AuthController {
   @Post('/send-code')
   async sendVerificationCode(
     @Body() dto: SendVerificationCodeDto,
-  ): Promise<{ verificationCodeExpDate: string }> {
+  ): Promise<{ verificationCodeExpDate: Date }> {
     return await this.authService.sendVerificationCode(dto.phoneNumber);
   }
 

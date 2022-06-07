@@ -1,5 +1,9 @@
+import { EPermission } from 'src/module/role/enum/permission.enum';
+import { RoleEntity } from './../role/entity/role.entity';
 import { Injectable, Logger } from '@nestjs/common';
 import { verify } from 'argon2';
+import { ERole } from '../role/enum/role.enum';
+import { PermissionEntity } from '../role/entity/permission.entity';
 
 @Injectable()
 export class AuthHelper {
@@ -21,6 +25,19 @@ export class AuthHelper {
 
     this.logger.debug('verifyPassword -- success');
     return isCorrectPassword;
+  }
+
+  userPermissions(): RoleEntity[] {
+    const userRole = new RoleEntity();
+    const firstPermission = new PermissionEntity();
+    const secondPermission = new PermissionEntity();
+
+    userRole.title = ERole.USER;
+    firstPermission.title = EPermission.USER_READ;
+    secondPermission.title = EPermission.USER_WRITE;
+
+    userRole.permissions = [firstPermission, secondPermission];
+    return [userRole];
   }
 
   generateCode(): string {

@@ -1,5 +1,7 @@
-import { FileModule } from './module/file/file.module';
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { S3Module } from './module/s3/s3.module';
+import { MessageModule } from './module/message/message.module';
+import { getConfig } from 'src/common/util';
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './module/user/user.module';
 import { ConfigModule } from '@nestjs/config';
@@ -8,8 +10,8 @@ import { APP_GUARD } from '@nestjs/core';
 import { PermissionsGuard } from './module/auth/decorator/permissions.guard';
 import { AuthMiddleware } from './module/auth/auth.middleware';
 import { RoleModule } from './module/role/role.module';
-import { S3Service } from './providers/s3/s3.service';
-// import { TwilioModule } from 'nestjs-twilio';
+import { TwilioModule } from 'nestjs-twilio';
+import { EConfig } from './common/config.enum';
 
 @Module({
   imports: [
@@ -18,17 +20,23 @@ import { S3Service } from './providers/s3/s3.service';
     AuthModule,
     UserModule,
     RoleModule,
-    FileModule,
-    S3Service,
-    // TwilioModule.forRoot({
-    //   accountSid: 'AC54e4db69a9747c37bf4a54b5f4467bf5',
-    //   authToken: '8ec161fcffb030335119ad4934a2a947',
-    // }),
+    S3Module,
+    MessageModule,
+    TwilioModule.forRoot({
+      accountSid: getConfig(EConfig.TWILIO_ACCOUNT_SID),
+      authToken: getConfig(EConfig.TWILIO_AUTH_TOKEN),
+    }),
   ],
   providers: [{ provide: APP_GUARD, useClass: PermissionsGuard }],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes('/api/*');
+    consumer
+      .apply(AuthMiddleware)
+      .forRoutes(
+        { path: '/api/user/*', method: RequestMethod.ALL },
+        { path: '/api/file/*', method: RequestMethod.ALL },
+        { path: '/api/message/*', method: RequestMethod.ALL },
+      );
   }
 }
