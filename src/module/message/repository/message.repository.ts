@@ -9,4 +9,9 @@ export class MessageRepository extends GenericRepository {
   constructor(@InjectRepository(MessageEntity) private repository: Repository<MessageEntity>) {
     super();
   }
+
+  async save(entity: MessageEntity): Promise<MessageEntity> {
+    if (!entity) return null;
+    return await this.runQuery(() => this.repository.save(entity));
+  }
 }

@@ -1,3 +1,4 @@
+import { MessageEntity } from './../entity/message.entity';
 import {
   IsNotEmpty,
   IsNumber,
@@ -13,7 +14,7 @@ export class SaveMessageDto {
   @IsNumber()
   roomId: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   message: string;
 
@@ -36,4 +37,17 @@ export class SaveMessageDto {
   @IsArray()
   @IsInt({ each: true })
   deletedBy: number[];
+
+  public static toEntity(dto: SaveMessageDto, encryptedMessage: string): MessageEntity {
+    if (!dto || !encryptedMessage) return null;
+    const entity = new MessageEntity();
+    entity.roomId = dto.roomId;
+    entity.message = encryptedMessage;
+    entity.from = dto.from;
+    entity.to = dto.to;
+    entity.mediaUrl = dto.mediaUrl;
+    entity.isRead = dto.isRead;
+    entity.deletedBy = dto.deletedBy;
+    return entity;
+  }
 }

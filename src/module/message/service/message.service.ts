@@ -4,6 +4,7 @@ import { SaveMessageDto } from './../dto/saveMessage.dto';
 import { MessageRepository } from './../repository/message.repository';
 import { Injectable, Logger, InternalServerErrorException } from '@nestjs/common';
 import { UserService } from 'src/module/user/user.service';
+import { encrypt } from 'src/common/cryption';
 
 @Injectable()
 export class MessageService {
@@ -34,9 +35,26 @@ export class MessageService {
       throw new InternalServerErrorException();
     }
 
-    // const message = this.messageRepository.save();
+    const { mediaUrl, message } = dto;
+    if (!mediaUrl && !message) {
+      this.log.debug('create -- invalid argument(s)');
+      throw new InternalServerErrorException();
+    }
+
+    const encryptedMessage = encrypt(message);
+    if (!encryptedMessage) {
+      this.log.error('create -- message could not encrypted');
+      throw new InternalServerErrorException();
+    }
+
+    const entity = SaveMessageDto.toEntity(dto, encryptedMessage);
+    const savedMessage = this.messageRepository.save(entity);
+    if (!savedMessage) {
+      this.log.error('create -- could not saved message');
+      throw new InternalServerErrorException();
+    }
 
     this.log.debug('create -- success');
-    return;
+    return savedMessage;
   }
 }
