@@ -23,7 +23,9 @@ export class AuthService {
 
   private readonly log = new Logger(AuthService.name);
 
-  async sendVerificationCode(phoneNumber: string): Promise<{ verificationCodeExpDate: Date }> {
+  async sendVerificationCode(
+    phoneNumber: string,
+  ): Promise<{ verificationCodeExpDate: Date; verificationCode: string }> {
     this.log.debug('sendVerificationCode -- start');
     if (!phoneNumber) {
       this.log.debug('sendVerificationCode -- invalid argument(s)');
@@ -55,7 +57,8 @@ export class AuthService {
       throw new InternalServerErrorException();
     }
     this.log.debug('sendVerificationCode -- success');
-    return { verificationCodeExpDate };
+    // verificationCode silinecek
+    return { verificationCode, verificationCodeExpDate };
   }
 
   async login(phoneNumber: string, verificationCode: string): Promise<{ access_token: string }> {
