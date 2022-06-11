@@ -69,14 +69,14 @@ export class UserService {
     return user;
   }
 
-  async update(id: number, dto: SaveUserDto): Promise<any> {
+  async update(dto: SaveUserDto): Promise<any> {
     this.log.debug('update -- start');
-    if (!dto) {
+    if (!dto || !dto.phoneNumber) {
       this.log.debug('update -- invalid argument(s)');
       throw new InternalServerErrorException();
     }
 
-    const user = await this.userRepository.findById(id);
+    const user = await this.userRepository.findByPhone(dto.phoneNumber);
     if (!user) {
       this.log.debug('update -- user not found');
       throw new NotFoundException('User not found');
@@ -93,7 +93,6 @@ export class UserService {
     }
 
     let updatedEntity = { ...user, ...SaveUserDto.toEntity(dto) };
-    console.log(updatedEntity.birthDate);
     updatedEntity = await this.userRepository.save(updatedEntity);
     if (!updatedEntity) {
       this.log.warn('update -- could not save user');

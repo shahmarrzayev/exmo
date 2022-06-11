@@ -6,7 +6,7 @@ export class MessageDto {
   to: number;
   mediaUrl: string;
   isRead: boolean;
-  deletedBy: number[];
+  deletedBy: string[];
 
   public static fromEntity(entity: MessageEntity): MessageDto {
     const dto = new MessageDto();
