@@ -33,16 +33,18 @@ export class AuthService {
     }
 
     const verificationCode = this.authHelper.generateCode();
-    try {
-      await this.twilioClient.messages.create({
-        body: `Your verification code: ${verificationCode}`,
-        from: getConfig(EConfig.TWILIO_PHONE_NUMBER),
-        to: phoneNumber,
-      });
-    } catch (err) {
-      this.log.error(`${err}`);
-      throw new InternalServerErrorException();
-    }
+    // Sonrada qoshulacaq
+
+    // try {
+    //   await this.twilioClient.messages.create({
+    //     body: `Your verification code: ${verificationCode}`,
+    //     from: getConfig(EConfig.TWILIO_PHONE_NUMBER),
+    //     to: phoneNumber,
+    //   });
+    // } catch (err) {
+    //   this.log.error(`${err}`);
+    //   throw new InternalServerErrorException();
+    // }
 
     const verificationCodeExpDate = new Date(
       Date.now() + getConfig(EConfig.VERIFICATION_CODE_EXPIRATION_TIME) * 1000,
@@ -57,7 +59,7 @@ export class AuthService {
       throw new InternalServerErrorException();
     }
     this.log.debug('sendVerificationCode -- success');
-    // verificationCode silinecek
+    // verificationCode burdan silinecek
     return { verificationCode, verificationCodeExpDate };
   }
 
