@@ -57,4 +57,47 @@ export class MessageService {
     this.log.debug('create -- success');
     return savedMessage;
   }
+
+  async delete(id: string): Promise<MessageEntity> {
+    this.log.debug('delete -- start');
+    if (!id) {
+      this.log.debug('delete -- invalid argument(s)');
+      throw new InternalServerErrorException();
+    }
+
+    const message = await this.messageRepository.findById(id);
+    if (!message) {
+      this.log.debug('delete -- message not found');
+      throw new InternalServerErrorException();
+    }
+
+    message.deletedBy = [];
+
+    this.log.debug('delete -- success');
+    return;
+  }
+
+  async update(id: string, user: UserEntity, dto: SaveMessageDto): Promise<MessageEntity> {
+    this.log.debug('update -- start');
+    if (!dto) {
+      this.log.debug('update -- invalid argument(s)');
+      throw new InternalServerErrorException();
+    }
+
+    const message = await this.messageRepository.findById(id);
+    if (!message) {
+      this.log.debug('update -- message not found');
+      throw new InternalServerErrorException();
+    }
+
+    let updatedEntity = { ...message, ...SaveMessageDto.toEntity(dto) };
+    updatedEntity = await this.messageRepository.save(updatedEntity);
+    if (!updatedEntity) {
+      this.log.warn('update -- message not updated');
+      throw new InternalServerErrorException();
+    }
+
+    this.log.debug('update -- success');
+    return updatedEntity;
+  }
 }

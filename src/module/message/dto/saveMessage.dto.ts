@@ -36,13 +36,13 @@ export class SaveMessageDto {
 
   @IsArray()
   @IsInt({ each: true })
-  deletedBy: number[];
+  deletedBy: string[];
 
-  public static toEntity(dto: SaveMessageDto, encryptedMessage: string): MessageEntity {
+  public static toEntity(dto: SaveMessageDto, encryptedMessage?: string): MessageEntity {
     if (!dto || !encryptedMessage) return null;
     const entity = new MessageEntity();
     entity.roomId = dto.roomId;
-    entity.message = encryptedMessage;
+    entity.message = encryptedMessage || dto.message;
     entity.from = dto.from;
     entity.to = dto.to;
     entity.mediaUrl = dto.mediaUrl;

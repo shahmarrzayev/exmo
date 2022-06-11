@@ -40,6 +40,7 @@ export class SaveUserDto {
   lastSeen?: string;
 
   public static toEntity(dto: SaveUserDto): UserEntity {
+    if (!dto) return null;
     const entity = new UserEntity();
     entity.firstName = dto.firstName;
     entity.lastName = dto.lastName;

@@ -1,7 +1,5 @@
 import { SaveMessageDto } from './../dto/saveMessage.dto';
-import { Controller, Post, Body, Req } from '@nestjs/common';
-import { Permissions } from 'src/module/auth/decorator/permission.decorator';
-import { EPermission } from 'src/module/role/enum/permission.enum';
+import { Controller, Post, Body, Req, Param } from '@nestjs/common';
 import { MessageService } from '../service/message.service';
 import { MessageDto } from '../dto/message.dto';
 
@@ -10,13 +8,18 @@ export class MessageController {
   constructor(private readonly messageService: MessageService) {}
 
   @Post('/create')
-  @Permissions(EPermission.USER_WRITE)
-  async create(@Req() req, @Body() dto: SaveMessageDto): Promise<MessageDto> {
+  async create(@Req() req: any, @Body() dto: SaveMessageDto): Promise<MessageDto> {
     const message = await this.messageService.create(req.user, dto);
     return MessageDto.fromEntity(message);
   }
 
   @Post()
-  @Permissions(EPermission.PERMISSION_WRITE)
-  async update() {}
+  async update(
+    @Param('id') id: string,
+    @Req() req: any,
+    @Body() dto: SaveMessageDto,
+  ): Promise<MessageDto> {
+    const message = await this.messageService.update(id, req.user, dto);
+    return MessageDto.fromEntity(message);
+  }
 }

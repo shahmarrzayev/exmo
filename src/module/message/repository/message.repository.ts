@@ -14,4 +14,11 @@ export class MessageRepository extends GenericRepository {
     if (!entity) return null;
     return await this.runQuery(() => this.repository.save(entity));
   }
+
+  async findById(id: string): Promise<MessageEntity> {
+    if (!id) return null;
+    return await this.runQuery(() =>
+      this.repository.createQueryBuilder('message').where('message.id = :id', { id }).getOne(),
+    );
+  }
 }

@@ -34,8 +34,8 @@ export class MessageEntity {
   @Column({ name: 'is_read' })
   isRead: boolean;
 
-  @Column('int', { name: 'deleted_by', array: true })
-  deletedBy: number[];
+  @Column('text', { name: 'deleted_by', array: true })
+  deletedBy: string[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt?: Date;
