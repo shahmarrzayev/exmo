@@ -1,7 +1,8 @@
+import { UserDto } from './../user/dto/user.dto';
 import { Body, Controller, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LoginDto } from './dto/login.dto';
-import { SendVerificationCodeDto } from './dto/sendVerificationCode.dto';
+import { LoginDto } from './dto/input/login.dto';
+import { SendVerificationCodeDto } from './dto/input/sendVerificationCode.dto';
 
 @Controller('api/auth')
 export class AuthController {
@@ -15,7 +16,7 @@ export class AuthController {
   }
 
   @Post('/login')
-  async login(@Body() dto: LoginDto): Promise<{ access_token: string }> {
+  async login(@Body() dto: LoginDto): Promise<{ access_token: string; user: UserDto }> {
     return await this.authService.login(dto.phoneNumber, dto.verificationCode);
   }
 }

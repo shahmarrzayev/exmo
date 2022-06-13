@@ -18,6 +18,7 @@ export class S3Service {
 
   async upload(file: Express.Multer.File): Promise<{ url: string }> {
     this.log.debug('upload -- start');
+    console.log('file -- ', file);
     if (!file) {
       this.log.debug('upload -- invalid argument(s)');
       throw new InternalServerErrorException();

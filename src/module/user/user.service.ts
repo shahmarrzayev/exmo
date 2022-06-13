@@ -69,6 +69,28 @@ export class UserService {
     return user;
   }
 
+  getProfile(user: UserEntity): Promise<UserEntity> {
+    this.log.debug('getProfile -- start');
+    if (!user) {
+      this.log.debug('getProfile -- internal server error');
+      throw new InternalServerErrorException();
+    }
+
+    const { id } = user;
+    if (!id) {
+      this.log.debug('getProfile -- internal server error');
+      throw new InternalServerErrorException();
+    }
+
+    const entity = this.userRepository.findById(id);
+    if (!entity) {
+      this.log.debug('getProfile -- ');
+      throw new InternalServerErrorException();
+    }
+    this.log.debug('getProfile -- success');
+    return entity;
+  }
+
   async update(dto: SaveUserDto): Promise<any> {
     this.log.debug('update -- start');
     if (!dto || !dto.phoneNumber) {

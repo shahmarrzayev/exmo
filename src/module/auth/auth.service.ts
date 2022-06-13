@@ -1,3 +1,4 @@
+import { UserDto } from './../user/dto/user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import {
@@ -17,8 +18,7 @@ export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly userService: UserService,
-    private readonly authHelper: AuthHelper,
-    @InjectTwilio() private readonly twilioClient: TwilioClient,
+    private readonly authHelper: AuthHelper, // @InjectTwilio() private readonly twilioClient: TwilioClient,
   ) {}
 
   private readonly log = new Logger(AuthService.name);
@@ -63,7 +63,10 @@ export class AuthService {
     return { verificationCode, verificationCodeExpDate };
   }
 
-  async login(phoneNumber: string, verificationCode: string): Promise<{ access_token: string }> {
+  async login(
+    phoneNumber: string,
+    verificationCode: string,
+  ): Promise<{ access_token: string; user: UserDto }> {
     this.log.debug('login -- start');
     const user = await this.userService.getByPhone(phoneNumber);
     if (!user || !user.isActive) {
@@ -82,6 +85,6 @@ export class AuthService {
       secret: getConfig(EConfig.EXMO_JWT_ACCESS_SECRET_KEY),
     });
     this.log.debug('login -- success');
-    return { access_token: accessToken };
+    return { access_token: accessToken, user: UserDto.fromEntity(user) };
   }
 }

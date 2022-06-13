@@ -1,4 +1,4 @@
-import { EPermission } from 'src/module/role/enum/permission.enum';
+import { EPermission } from '../role/enum/permission.enum';
 import { RoleEntity } from './../role/entity/role.entity';
 import { Injectable, Logger } from '@nestjs/common';
 import { verify } from 'argon2';
