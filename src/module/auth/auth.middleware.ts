@@ -27,7 +27,6 @@ export class AuthMiddleware implements NestMiddleware {
     try {
       const { id }: any = verify(accessToken, getConfig(EConfig.EXMO_JWT_ACCESS_SECRET_KEY));
       user = await this.userService.getById(id);
-      console.log('user -- ', user);
     } catch (error) {
       this.logger.error(`${JSON.stringify(error)}`);
       throw new ForbiddenException('Please register or sign in.');

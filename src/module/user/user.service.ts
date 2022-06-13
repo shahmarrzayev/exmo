@@ -91,24 +91,18 @@ export class UserService {
     return entity;
   }
 
-  async update(dto: SaveUserDto): Promise<any> {
+  async update(user: UserEntity, dto: SaveUserDto): Promise<any> {
     this.log.debug('update -- start');
-    if (!dto || !dto.phoneNumber) {
+    if (!dto || !user) {
       this.log.debug('update -- invalid argument(s)');
       throw new InternalServerErrorException();
     }
 
-    const user = await this.userRepository.findByPhone(dto.phoneNumber);
-    if (!user) {
-      this.log.debug('update -- user not found');
-      throw new NotFoundException('User not found');
-    }
-
-    if (user.username !== dto.username && (await this.usernameExists(dto.username))) {
+    const { username } = dto;
+    if (user.username !== username && (await this.usernameExists(username))) {
       this.log.debug('update -- username already in use');
       throw new ConflictException('Username already in use');
     }
-
     if (user.refferalCode && dto.refferalCode) {
       this.log.debug('update -- refferal code exists, cannot be changed');
       throw new ConflictException('Refferal code exists');

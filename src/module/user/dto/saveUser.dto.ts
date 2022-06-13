@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty, IsOptional, IsPhoneNumber, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { UserEntity } from '../user.entity';
 import { EGender } from '../user.enum';
 
@@ -10,10 +10,6 @@ export class SaveUserDto {
   @IsNotEmpty()
   @IsString()
   lastName: string;
-
-  @IsNotEmpty()
-  @IsPhoneNumber()
-  phoneNumber: string;
 
   @IsNotEmpty()
   @IsString()
@@ -44,7 +40,6 @@ export class SaveUserDto {
     const entity = new UserEntity();
     entity.firstName = dto.firstName;
     entity.lastName = dto.lastName;
-    entity.phoneNumber = dto.phoneNumber;
     entity.username = dto.username;
     entity.gender = dto.gender;
     entity.image = dto.image;
