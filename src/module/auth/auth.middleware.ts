@@ -33,13 +33,13 @@ export class AuthMiddleware implements NestMiddleware {
       throw new ForbiddenException('Please register or sign in.');
     }
 
-    // if (user && user.isActive) {
-    //   if (user.isUser) {
-    //     user.roles = this.authHelper.userPermissions();
-    //   }
+    if (user && user.isActive) {
+      if (user.isUser) {
+        user.roles = this.authHelper.userPermissions();
+      }
 
-    //   req.user = user;
-    // }
+      req.user = user;
+    }
     this.logger.debug('use -- success');
     next();
   }
