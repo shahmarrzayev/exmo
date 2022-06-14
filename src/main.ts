@@ -3,7 +3,7 @@ import { TransformInterceptor } from './module/auth/interceptors/transform.inter
 import { getConfig } from './common/util';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe, Logger } from '@nestjs/common';
+import { ValidationPipe } from '@nestjs/common';
 import { EConfig } from './common/config.enum';
 import helmet from 'helmet';
 import * as compression from 'compression';

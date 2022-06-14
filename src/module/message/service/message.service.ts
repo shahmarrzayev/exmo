@@ -15,10 +15,16 @@ export class MessageService {
 
   private readonly log = new Logger(MessageService.name);
 
-  async create(user: UserEntity, dto: SaveMessageDto): Promise<MessageEntity> {
+  async create(dto: SaveMessageDto): Promise<MessageEntity> {
     this.log.debug('create -- start');
     if (!dto) {
       this.log.debug('create -- invalid argument(s)');
+      throw new InternalServerErrorException();
+    }
+    console.log(dto);
+    const user = await this.userService.getById(dto.from);
+    if (!user) {
+      this.log.debug('create -- user not found');
       throw new InternalServerErrorException();
     }
 
@@ -48,7 +54,7 @@ export class MessageService {
     }
 
     const entity = SaveMessageDto.toEntity(dto, encryptedMessage);
-    const savedMessage = this.messageRepository.save(entity);
+    const savedMessage = await this.messageRepository.save(entity);
     if (!savedMessage) {
       this.log.error('create -- could not saved message');
       throw new InternalServerErrorException();

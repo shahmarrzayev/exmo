@@ -15,17 +15,20 @@ export class MessageEntity {
   @PrimaryGeneratedColumn()
   id?: number;
 
-  @ManyToMany(() => UserEntity)
-  @JoinColumn({ name: 'room_id' })
+  // @ManyToMany(() => UserEntity)
+  // @JoinColumn({ name: 'room_id' })
+  @Column({ name: 'room_id' })
   roomId: number;
 
   @Column()
   message: string;
 
-  @ManyToOne(() => UserEntity)
+  // @ManyToOne(() => UserEntity)
+  @Column()
   from: number;
 
-  @ManyToOne(() => UserEntity)
+  // @ManyToOne(() => UserEntity)
+  @Column()
   to: number;
 
   @Column({ name: 'media_url' })
