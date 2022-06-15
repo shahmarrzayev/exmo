@@ -55,7 +55,7 @@ export class MessageGateway implements OnGatewayInit, OnGatewayConnection, OnGat
 
   @SubscribeMessage('sendToReceiver')
   async sendMessage(client: Socket, payload: SaveMessageDto) {
-    const { to }: any = client.handshake.query;
+    const { to } = payload;
     client.to(users[to]).emit('receiveFromSender', { ...payload });
     await this.messageService.create(payload);
   }

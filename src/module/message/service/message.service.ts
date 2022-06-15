@@ -64,7 +64,7 @@ export class MessageService {
     return savedMessage;
   }
 
-  async delete(id: string): Promise<MessageEntity> {
+  async delete(user: UserEntity, id: string): Promise<MessageEntity> {
     this.log.debug('delete -- start');
     if (!id) {
       this.log.debug('delete -- invalid argument(s)');
@@ -77,10 +77,14 @@ export class MessageService {
       throw new InternalServerErrorException();
     }
 
-    message.deletedBy = [];
+    if (message.deletedBy.includes(user.id)) {
+      this.log.debug('delete -- message already deleted');
+      throw new InternalServerErrorException();
+    }
+    message.deletedBy = [...message.deletedBy, user.id];
 
     this.log.debug('delete -- success');
-    return;
+    return message;
   }
 
   async update(id: string, user: UserEntity, dto: SaveMessageDto): Promise<MessageEntity> {

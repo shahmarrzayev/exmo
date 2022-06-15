@@ -15,8 +15,6 @@ export class MessageEntity {
   @PrimaryGeneratedColumn()
   id?: number;
 
-  // @ManyToMany(() => UserEntity)
-  // @JoinColumn({ name: 'room_id' })
   @Column({ name: 'room_id' })
   roomId: number;
 
@@ -37,8 +35,8 @@ export class MessageEntity {
   @Column({ name: 'is_read' })
   isRead: boolean;
 
-  @Column('text', { name: 'deleted_by', array: true })
-  deletedBy: string[];
+  @Column('int', { name: 'deleted_by', array: true })
+  deletedBy: number[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt?: Date;

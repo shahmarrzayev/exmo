@@ -6,7 +6,9 @@ export class MessageDto {
   to: number;
   mediaUrl: string;
   isRead: boolean;
-  deletedBy: string[];
+  deletedBy: number[];
+  createdAt: Date;
+  updatedAt: Date;
 
   public static fromEntity(entity: MessageEntity): MessageDto {
     const dto = new MessageDto();
@@ -15,6 +17,8 @@ export class MessageDto {
     dto.to = entity.to;
     dto.isRead = entity.isRead;
     dto.deletedBy = entity.deletedBy;
+    dto.createdAt = entity.createdAt;
+    dto.updatedAt = entity.updatedAt;
     return dto;
   }
 }

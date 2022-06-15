@@ -7,6 +7,8 @@ import {
   IsArray,
   IsInt,
   IsBoolean,
+  IsEmpty,
+  IsDate,
 } from 'class-validator';
 
 export class SaveMessageDto {
@@ -34,9 +36,13 @@ export class SaveMessageDto {
   @IsBoolean()
   isRead: boolean;
 
-  @IsArray()
-  @IsInt({ each: true })
-  deletedBy: string[];
+  @IsEmpty()
+  @IsDate()
+  createdAt: Date;
+
+  @IsEmpty()
+  @IsDate()
+  updatedAt: Date;
 
   public static toEntity(dto: SaveMessageDto, encryptedMessage?: string): MessageEntity {
     if (!dto || !encryptedMessage) return null;
@@ -47,7 +53,6 @@ export class SaveMessageDto {
     entity.to = dto.to;
     entity.mediaUrl = dto.mediaUrl;
     entity.isRead = dto.isRead;
-    entity.deletedBy = dto.deletedBy;
     return entity;
   }
 }
