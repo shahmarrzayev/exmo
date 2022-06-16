@@ -18,7 +18,7 @@ const users = {};
 
 @WebSocketGateway(8090, { cors: { origin: '*' } })
 export class MessageGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
-  constructor(private readonly messageService: MessageService) {}
+  constructor(private readonly messageService: MessageService) { }
   private readonly logger = new Logger(MessageGateway.name);
   @WebSocketServer() wss: Server;
 
@@ -56,6 +56,7 @@ export class MessageGateway implements OnGatewayInit, OnGatewayConnection, OnGat
   @SubscribeMessage('sendToReceiver')
   async sendMessage(client: Socket, payload: SaveMessageDto) {
     const { to } = payload;
+    console.log(users[to]);
     client.to(users[to]).emit('receiveFromSender', { ...payload });
     await this.messageService.create(payload);
   }

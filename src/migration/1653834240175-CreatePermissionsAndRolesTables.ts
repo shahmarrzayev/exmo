@@ -25,6 +25,5 @@ export class CreatePermissionsAndRolesTables1653834240175 implements MigrationIn
   `);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public async down(_queryRunner: QueryRunner): Promise<void> {}
+  public async down(queryRunner: QueryRunner): Promise<void> {}
 }
