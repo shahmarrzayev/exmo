@@ -1,10 +1,27 @@
 import { MessageEntity } from './message.entity';
-import { Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity('rooms')
 export class RoomEntity {
   @PrimaryGeneratedColumn()
   id?: number;
+
+  @Column()
+  from: number;
+
+  @Column()
+  to: number;
+
+  @Column({ name: 'is_deleted' })
+  isDeleted: boolean;
 
   @ManyToMany(() => MessageEntity, { eager: true })
   @JoinTable({
@@ -13,4 +30,10 @@ export class RoomEntity {
     inverseJoinColumn: { name: 'message_id', referencedColumnName: 'id' },
   })
   messages: MessageEntity[];
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt?: Date;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt?: Date;
 }

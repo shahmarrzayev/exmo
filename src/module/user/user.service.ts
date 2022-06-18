@@ -28,7 +28,7 @@ export class UserService {
     this.log.debug('save -- start');
     if (!phoneNumber || !verificationCode || !verificationCodeExpDate) {
       this.log.warn('save -- invalid argument(s)');
-      throw new InternalServerErrorException();
+      throw new InternalServerErrorException('invalid argument(s)');
     }
 
     let entity = await this.userRepository.findByPhone(phoneNumber);

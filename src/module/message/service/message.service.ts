@@ -19,45 +19,45 @@ export class MessageService {
     this.log.debug('create -- start');
     if (!dto) {
       this.log.debug('create -- invalid argument(s)');
-      throw new InternalServerErrorException();
+      throw new InternalServerErrorException('invalid argument(s)');
     }
-    console.log(dto);
+
     const user = await this.userService.getById(dto.from);
     if (!user) {
       this.log.debug('create -- user not found');
-      throw new InternalServerErrorException();
+      throw new InternalServerErrorException('user not found');
     }
 
     const { blockedList } = user || {};
     if (blockedList && !blockedList.includes(dto.to)) {
       this.log.debug('create -- you have blocked this user');
-      throw new InternalServerErrorException();
+      throw new InternalServerErrorException('you have blocked this user');
     }
 
     const sendedUser = await this.userService.getById(dto.to);
     const { blockedList: sendedUserBlockedList } = sendedUser || {};
     if (sendedUserBlockedList && !sendedUserBlockedList.includes(dto.from)) {
       this.log.debug('create -- this user has blocked you');
-      throw new InternalServerErrorException();
+      throw new InternalServerErrorException('this user has blocked you');
     }
 
     const { mediaUrl, message } = dto;
     if (!mediaUrl && !message) {
       this.log.debug('create -- invalid argument(s)');
-      throw new InternalServerErrorException();
+      throw new InternalServerErrorException('invalid argument(s)');
     }
 
     const encryptedMessage = encrypt(message);
     if (!encryptedMessage) {
       this.log.error('create -- message could not encrypted');
-      throw new InternalServerErrorException();
+      throw new InternalServerErrorException('message could not encrypted');
     }
 
     const entity = SaveMessageDto.toEntity(dto, encryptedMessage);
     const savedMessage = await this.messageRepository.save(entity);
     if (!savedMessage) {
       this.log.error('create -- could not saved message');
-      throw new InternalServerErrorException();
+      throw new InternalServerErrorException('could not saved message');
     }
 
     this.log.debug('create -- success');
@@ -68,18 +68,18 @@ export class MessageService {
     this.log.debug('delete -- start');
     if (!id) {
       this.log.debug('delete -- invalid argument(s)');
-      throw new InternalServerErrorException();
+      throw new InternalServerErrorException('invalid argument(s)');
     }
 
     const message = await this.messageRepository.findById(id);
     if (!message) {
       this.log.debug('delete -- message not found');
-      throw new InternalServerErrorException();
+      throw new InternalServerErrorException('message not found');
     }
 
     if (message.deletedBy.includes(user.id)) {
       this.log.debug('delete -- message already deleted');
-      throw new InternalServerErrorException();
+      throw new InternalServerErrorException('message already deleted');
     }
     message.deletedBy = [...message.deletedBy, user.id];
 
@@ -91,20 +91,20 @@ export class MessageService {
     this.log.debug('update -- start');
     if (!dto) {
       this.log.debug('update -- invalid argument(s)');
-      throw new InternalServerErrorException();
+      throw new InternalServerErrorException('invalid argument(s)');
     }
 
     const message = await this.messageRepository.findById(id);
     if (!message) {
       this.log.debug('update -- message not found');
-      throw new InternalServerErrorException();
+      throw new InternalServerErrorException('message not found');
     }
 
     let updatedEntity = { ...message, ...SaveMessageDto.toEntity(dto) };
     updatedEntity = await this.messageRepository.save(updatedEntity);
     if (!updatedEntity) {
       this.log.warn('update -- message not updated');
-      throw new InternalServerErrorException();
+      throw new InternalServerErrorException('message not updated');
     }
 
     this.log.debug('update -- success');

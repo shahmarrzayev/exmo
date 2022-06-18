@@ -33,7 +33,7 @@ export class AuthService {
     }
 
     const verificationCode = this.authHelper.generateCode();
-    // Sonrada qoshulacaq
+    // Sonradan qoshulacaq
 
     // try {
     //   await this.twilioClient.messages.create({
@@ -71,13 +71,13 @@ export class AuthService {
     const user = await this.userService.getByPhone(phoneNumber);
     if (!user || !user.isActive) {
       this.log.debug('login -- user is not active');
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('user is not active');
     }
 
     const nowDate = new Date(Date.now());
     if (verificationCode != user.verificationCode || nowDate > user.verificationCodeExpDate) {
       this.log.debug('login -- verification code is not correct or has expired');
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('verification code is not correct or has expired');
     }
 
     const payload = { id: user.id, phoneNumber: user.phoneNumber, isActive: user.isActive };
