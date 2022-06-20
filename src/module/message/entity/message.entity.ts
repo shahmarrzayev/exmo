@@ -2,7 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinTable,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -13,8 +13,6 @@ import { RoomEntity } from './room.entity';
 export class MessageEntity {
   @PrimaryGeneratedColumn()
   id?: number;
-
-  roomId: number;
 
   @Column()
   message: string;
@@ -34,13 +32,9 @@ export class MessageEntity {
   @Column('int', { name: 'deleted_by', array: true })
   deletedBy: number[];
 
-  @ManyToOne(() => RoomEntity)
-  @JoinTable({
-    name: 'roles_permissions',
-    joinColumn: { name: 'role_id', referencedColumnName: 'id' },
-    inverseJoinColumn: { name: 'permission_id', referencedColumnName: 'id' },
-  })
-  room: number;
+  @ManyToOne(() => RoomEntity, (r) => r.messages)
+  @JoinColumn({ name: 'room_id' })
+  roomId: number;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt?: Date;

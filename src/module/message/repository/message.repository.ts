@@ -21,4 +21,9 @@ export class MessageRepository extends GenericRepository {
       this.repository.createQueryBuilder('message').where('message.id = :id', { id }).getOne(),
     );
   }
+
+  async findAllByIds(ids: number[]): Promise<MessageEntity[]> {
+    if (!ids || !ids.length) return null;
+    return await this.runQuery(() => this.repository.findByIds(ids));
+  }
 }

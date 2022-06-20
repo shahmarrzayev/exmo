@@ -3,8 +3,8 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinTable,
-  ManyToMany,
+  JoinColumn,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -23,12 +23,8 @@ export class RoomEntity {
   @Column({ name: 'is_deleted' })
   isDeleted: boolean;
 
-  @ManyToMany(() => MessageEntity, { eager: true })
-  @JoinTable({
-    name: 'rooms_messages',
-    joinColumn: { name: 'room_id', referencedColumnName: 'id' },
-    inverseJoinColumn: { name: 'message_id', referencedColumnName: 'id' },
-  })
+  @OneToMany(() => MessageEntity, (m) => m.roomId)
+  @JoinColumn({ name: 'room_id' })
   messages: MessageEntity[];
 
   @CreateDateColumn({ name: 'created_at' })

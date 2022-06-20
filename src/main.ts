@@ -7,9 +7,11 @@ import { ValidationPipe } from '@nestjs/common';
 import { EConfig } from './common/config.enum';
 import helmet from 'helmet';
 import * as compression from 'compression';
+import { WebSocketAdapter } from './module/message/websocket.adapter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.useWebSocketAdapter(new WebSocketAdapter(app));
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalInterceptors(new TransformInterceptor());
   app.useGlobalFilters(new HttpExceptionFilter());

@@ -5,11 +5,13 @@ import { MessageRepository } from './../repository/message.repository';
 import { Injectable, Logger, InternalServerErrorException } from '@nestjs/common';
 import { UserService } from 'src/module/user/user.service';
 import { encrypt } from 'src/common/cryption';
+import { RoomRepository } from '../repository/room.repository';
 
 @Injectable()
 export class MessageService {
   constructor(
     private readonly messageRepository: MessageRepository,
+    private readonly roomRepository: RoomRepository,
     private readonly userService: UserService,
   ) {}
 
@@ -53,7 +55,15 @@ export class MessageService {
       throw new InternalServerErrorException('message could not encrypted');
     }
 
+    const room = await this.roomRepository.findById(dto.roomId);
+    if (!room) {
+      this.log.debug('create -- room not available');
+      throw new InternalServerErrorException('room not available');
+    }
+
     const entity = SaveMessageDto.toEntity(dto, encryptedMessage);
+    entity.roomId = dto.roomId;
+
     const savedMessage = await this.messageRepository.save(entity);
     if (!savedMessage) {
       this.log.error('create -- could not saved message');

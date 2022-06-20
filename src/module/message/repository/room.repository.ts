@@ -10,14 +10,18 @@ export class RoomRepository extends GenericRepository {
     super();
   }
 
-  async findById(userId: number, roomId: number): Promise<RoomEntity> {
-    if (!userId || !roomId) return null;
+  async save(entity: RoomEntity): Promise<RoomEntity> {
+    if (!entity) return null;
+    return await this.runQuery(() => this.repository.save(entity));
+  }
+
+  async findById(id: number): Promise<RoomEntity> {
+    if (!id) return null;
     return await this.runQuery(() =>
       this.repository
         .createQueryBuilder('room')
-        .leftJoinAndSelect('room.messages', 'messages')
-        .where('room.id = :roomId', { roomId })
-        .andWhere('room.from = :userId', { userId })
+        .leftJoinAndSelect('room.messages', 'message')
+        .where('room.id = :id', { id })
         .getOne(),
     );
   }
@@ -25,7 +29,23 @@ export class RoomRepository extends GenericRepository {
   async findAll(from: number): Promise<RoomEntity[]> {
     if (!from) return null;
     return await this.runQuery(() =>
-      this.repository.createQueryBuilder('room').where('room.from = :from', { from }).getOne(),
+      this.repository
+        .createQueryBuilder('room')
+        .select(['room.id', 'room.from', 'room.to'])
+        .where('room.from = :from', { from })
+        .getMany(),
+    );
+  }
+
+  async findByToId(from: number, to: number): Promise<RoomEntity> {
+    if (!from || !to) return null;
+    return await this.runQuery(() =>
+      this.repository
+        .createQueryBuilder('room')
+        .where('room.from = :from', { from })
+        .andWhere('room.to = :to', { to })
+        .andWhere('room.is_deleted = false')
+        .getOne(),
     );
   }
 }
