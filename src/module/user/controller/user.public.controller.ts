@@ -1,7 +1,7 @@
 import { IRequest } from './../../auth/interfaces/request.interface';
 import { Body, Controller, Get, Post, Req } from '@nestjs/common';
-import { Permissions } from 'src/module/auth/decorator/permission.decorator';
-import { EPermission } from 'src/module/role/enum/permission.enum';
+import { Permissions } from '../../auth/decorator/permission.decorator';
+import { EPermission } from '../../role/enum/permission.enum';
 import { SaveUserDto } from '../dto/saveUser.dto';
 import { UserDto } from '../dto/user.dto';
 import { UserService } from '../user.service';
@@ -12,8 +12,8 @@ export class UserController {
 
   @Get('/')
   @Permissions(EPermission.USER_READ)
-  async getProfile(@Req() req: IRequest): Promise<UserDto> {
-    const user = await this.userService.getProfile(req.user);
+  async get(@Req() req: IRequest): Promise<UserDto> {
+    const user = await this.userService.get(req.user);
     return UserDto.fromEntity(user);
   }
 

@@ -69,7 +69,7 @@ export class UserService {
     return user;
   }
 
-  getProfile(user: UserEntity): Promise<UserEntity> {
+  async get(user: UserEntity): Promise<UserEntity> {
     this.log.debug('getProfile -- start');
     if (!user) {
       this.log.debug('getProfile -- internal server error');
@@ -123,5 +123,3 @@ export class UserService {
     return !!exists;
   }
 }
-
-// 123456
