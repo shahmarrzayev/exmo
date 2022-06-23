@@ -3,12 +3,15 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   JoinTable,
   ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { RoleEntity } from '../role/entity/role.entity';
+import { PostEntity } from '../post/post.entity';
 
 @Entity('users')
 export class UserEntity {
@@ -70,6 +73,10 @@ export class UserEntity {
     inverseJoinColumn: { name: 'role_id', referencedColumnName: 'id' },
   })
   roles?: RoleEntity[];
+
+  @OneToMany(() => PostEntity, (post) => post.userId)
+  @JoinColumn({ name: 'user_id' })
+  posts: PostEntity[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt?: Date;

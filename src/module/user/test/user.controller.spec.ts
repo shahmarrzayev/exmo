@@ -5,9 +5,32 @@ import { UserEntity } from '../user.entity';
 import { UserHelper } from '../user.helper';
 import { UserRepository } from '../user.repository';
 import { UserService } from '../user.service';
+import httpMocks from 'node-mocks-http';
 
 describe('UserController', () => {
-  let controller: UserController;
+  let userController: UserController;
+  let userService: UserService;
+
+  const mockUserService = {
+    get: jest.fn().mockReturnValue([new UserEntity()]),
+    getByPhone: jest.fn().mockResolvedValue([]),
+    getById: jest.fn().mockResolvedValue([]),
+    create: jest
+      .fn()
+      .mockImplementation(
+        (phoneNumber: string, verificationCode: string, verificationCodeExpDate: Date) => ({
+          verificationCodeExpDate: Date.now(),
+        }),
+      ),
+    update: jest.fn().mockResolvedValue([]),
+  };
+
+  const mockUserEntity = {
+    id: 1,
+    firstName: 'firstName',
+    lastName: 'lastName',
+    birthDate: new Date(Date.now()),
+  } as UserEntity;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -15,31 +38,21 @@ describe('UserController', () => {
       providers: [
         {
           provide: UserService,
-          useValue: {
-            save: jest.fn().mockResolvedValue((dto: SaveUserDto) =>
-              Promise.resolve({
-                ...dto,
-              }),
-            ),
-            get: jest.fn().mockResolvedValue([]),
-            getByPhone: jest.fn().mockResolvedValue([]),
-            getById: jest.fn().mockResolvedValue([]),
-            update: jest.fn().mockResolvedValue((dto: SaveUserDto) =>
-              Promise.resolve({
-                ...dto,
-              }),
-            ),
-          },
+          useValue: mockUserService,
         },
       ],
-    }).compile();
+    })
+      .overrideProvider(UserService)
+      .useValue(mockUserService)
+      .compile();
 
-    controller = module.get<UserController>(UserController);
+    userController = module.get<UserController>(UserController);
+    userService = module.get<UserService>(UserService);
   });
 
   it('should be defined', () => {
-    expect(controller).toBeDefined();
+    expect(userController).toBeDefined();
   });
 
-  describe('getProfile', () => {});
+  describe('get', () => {});
 });

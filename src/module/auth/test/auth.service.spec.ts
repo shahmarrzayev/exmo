@@ -10,7 +10,7 @@ let service: AuthService;
 describe('AuthService', () => {
   beforeEach(async () => {
     const fakeUserService: Partial<UserService> = {
-      save: (phoneNumber: string, verificationCode: string, verificationCodeExpDate: Date) =>
+      create: (phoneNumber: string, verificationCode: string, verificationCodeExpDate: Date) =>
         Promise.resolve({ phoneNumber, verificationCode, verificationCodeExpDate } as UserEntity),
       getByPhone: () => Promise.resolve({} as UserEntity),
     };

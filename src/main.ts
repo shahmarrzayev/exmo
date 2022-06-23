@@ -7,14 +7,14 @@ import { ValidationPipe } from '@nestjs/common';
 import { EConfig } from './common/config.enum';
 import helmet from 'helmet';
 import * as compression from 'compression';
-import { RedisIoAdapter } from './module/message/websocket.adapter';
+// import { RedisIoAdapter } from './module/message/websocket.adapter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const redisIoAdapter = new RedisIoAdapter(app);
-  await redisIoAdapter.connectToRedis();
+  // const redisIoAdapter = new RedisIoAdapter(app);
+  // await redisIoAdapter.connectToRedis();
 
-  app.useWebSocketAdapter(redisIoAdapter);
+  // app.useWebSocketAdapter(redisIoAdapter);
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalInterceptors(new TransformInterceptor());
   app.useGlobalFilters(new HttpExceptionFilter());

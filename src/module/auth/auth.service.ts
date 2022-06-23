@@ -49,7 +49,7 @@ export class AuthService {
     const verificationCodeExpDate = new Date(
       Date.now() + getConfig(EConfig.VERIFICATION_CODE_EXPIRATION_TIME) * 1000,
     );
-    const savedUser = await this.userService.save(
+    const savedUser = await this.userService.create(
       phoneNumber,
       verificationCode,
       verificationCodeExpDate,

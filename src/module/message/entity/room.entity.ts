@@ -23,7 +23,7 @@ export class RoomEntity {
   @Column({ name: 'is_deleted' })
   isDeleted: boolean;
 
-  @OneToMany(() => MessageEntity, (m) => m.roomId)
+  @OneToMany(() => MessageEntity, (message) => message.roomId)
   @JoinColumn({ name: 'room_id' })
   messages: MessageEntity[];
 

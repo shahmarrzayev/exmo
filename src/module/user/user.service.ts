@@ -20,7 +20,7 @@ export class UserService {
 
   private readonly log = new Logger(UserService.name);
 
-  async save(
+  async create(
     phoneNumber: string,
     verificationCode: string,
     verificationCodeExpDate: Date,

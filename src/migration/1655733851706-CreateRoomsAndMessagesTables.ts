@@ -14,7 +14,7 @@ export class CreateRoomsAndMessagesTables1655733851706 implements MigrationInter
         
         CREATE TABLE messages(
           id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-          room_id INT REFERENCES rooms(id),
+          room_id INT REFERENCES rooms(id) NOT NULL,
           message VARCHAR(65536) NOT NULL,
           "from" INT NOT NULL,
           "to" INT NOT NULL,
@@ -24,7 +24,7 @@ export class CreateRoomsAndMessagesTables1655733851706 implements MigrationInter
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
           updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
-      `);
+    `);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {}
