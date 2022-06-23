@@ -57,7 +57,7 @@ export class UserEntity {
   @Column()
   image: string;
 
-  @Column()
+  @Column({ name: 'refferal_code' })
   refferalCode?: string;
 
   @Column({ name: 'verification_code' })
