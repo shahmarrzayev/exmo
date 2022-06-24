@@ -4,19 +4,21 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { UserEntity } from '../user/user.entity';
+import { CommentEntity } from '../comment/comment.entity';
+import { UserEntity } from '../user/entity/user.entity';
 
-@Entity()
+@Entity('posts')
 export class PostEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @ManyToOne(() => UserEntity, (user) => user.posts)
   @JoinColumn({ name: 'user_id' })
-  userId: number;
+  user: UserEntity;
 
   @Column()
   title: string;
@@ -29,6 +31,10 @@ export class PostEntity {
 
   @Column()
   content: string;
+
+  @OneToMany(() => CommentEntity, (comment) => comment.post)
+  @JoinColumn({ name: 'post_id' })
+  comments: string[];
 
   @Column({ name: 'is_deleted' })
   isDeleted: boolean;

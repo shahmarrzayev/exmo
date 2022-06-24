@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { decrypt } from 'src/common/cryption';
-import { UserEntity } from 'src/module/user/user.entity';
+import { UserEntity } from 'src/module/user/entity/user.entity';
 import { SaveRoomDto } from '../dto/saveRoom.dto';
 import { RoomEntity } from '../entity/room.entity';
 import { MessageRepository } from '../repository/message.repository';

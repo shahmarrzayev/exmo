@@ -14,6 +14,34 @@ export class CreateUsersAndPostsTable1655982065603 implements MigrationInterface
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
+
+        CREATE TABLE comments(
+            id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+            post_id INT REFERENCES posts(id) NOT NULL,
+            parent_comment_id INT REFERENCES comments(id) NULL,
+            content VARCHAR(65536) NOT NULL,
+            is_deleted BOOLEAN DEFAULT FALSE,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+
+        CREATE TABLE posts_likes(
+            id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+            post_id INT REFERENCES posts(id) NOT NULL,
+            user_contact_id INT REFERENCES users_contact_info(id) NOT NULL,
+            is_deleted BOOLEAN DEFAULT FALSE,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+
+        Create TABLE comments_likes(
+            id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+            comment_id INT REFERENCES comments(id) NOT NULL,
+            user_contact_id INT REFERENCES users_contact_info(id) NOT NULL,
+            is_deleted BOOLEAN DEFAULT FALSE,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
     `);
   }
   //   CREATE TABLE users(

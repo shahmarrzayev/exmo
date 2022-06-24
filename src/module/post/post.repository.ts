@@ -11,17 +11,27 @@ export class PostRepository extends GenericRepository {
   }
 
   async save(entity: PostEntity): Promise<PostEntity> {
+    if (!entity) return null;
     return await this.repository.save(entity);
   }
 
   async findById(id: number): Promise<PostEntity> {
-    return await this.repository.createQueryBuilder('post').where('post.id = :id', { id }).getOne();
+    if (!id) return null;
+    return await this.repository
+      .createQueryBuilder('post')
+      .select(['post', 'user.id'])
+      .leftJoin('post.user', 'user')
+      .where('post.id = :id', { id })
+      .getOne();
   }
 
   async findAll(userId: number): Promise<PostEntity[]> {
+    if (!userId) return null;
     return await this.repository
       .createQueryBuilder('post')
-      .where('post.userId = :userId', { userId })
+      .leftJoinAndSelect('post.user', 'user')
+      .where('post.user_id = :userId', { userId })
+      .andWhere('post.is_deleted = :isDeleted', { isDeleted: false })
       .getMany();
   }
 }

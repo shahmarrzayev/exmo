@@ -1,33 +1,23 @@
-import { UserEntity } from '../user.entity';
-import { EGender } from '../user.enum';
+import { PostEntity } from 'src/module/post/post.entity';
+import { RoleEntity } from 'src/module/role/entity/role.entity';
+import { UserContactEntity } from '../entity/contact.entity';
+import { UserEntity } from '../entity/user.entity';
 
 export class UserDto {
   id: number;
-  firstName: string;
-  lastName: string;
   phoneNumber: string;
-  username: string;
-  birthDate: Date;
-  lastSeen: Date;
-  gender: EGender;
-  blockedList: number[];
-  image: string;
-  refferalCode: string;
+  contactInfo: UserContactEntity;
+  contacts: UserContactEntity[];
+  posts: PostEntity[];
+  blockedList: UserEntity[];
+  roles: RoleEntity[];
 
   public static fromEntity(entity: UserEntity): UserDto {
     if (!entity) return null;
     const dto = new UserDto();
     dto.id = entity.id;
-    dto.firstName = entity.firstName;
-    dto.lastName = entity.lastName;
-    dto.phoneNumber = entity.phoneNumber;
-    dto.username = entity.username;
-    dto.birthDate = entity.birthDate;
-    dto.lastSeen = entity.lastSeen;
-    dto.gender = entity.gender;
+    dto.contactInfo = entity.contactInfo;
     dto.blockedList = entity.blockedList;
-    dto.image = entity.image;
-    dto.refferalCode = entity.refferalCode;
     return dto;
   }
 }

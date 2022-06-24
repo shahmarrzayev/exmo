@@ -1,14 +1,13 @@
 import {
-  ConflictException,
   Injectable,
   InternalServerErrorException,
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { UserRepository } from './user.repository';
+import { UserRepository } from './repository/user.repository';
 
 import { UserHelper } from './user.helper';
-import { UserEntity } from './user.entity';
+import { UserEntity } from './entity/user.entity';
 import { SaveUserDto } from './dto/saveUser.dto';
 
 @Injectable()
@@ -20,7 +19,7 @@ export class UserService {
 
   private readonly log = new Logger(UserService.name);
 
-  async create(
+  async save(
     phoneNumber: string,
     verificationCode: string,
     verificationCodeExpDate: Date,
@@ -51,7 +50,20 @@ export class UserService {
     const user = await this.userRepository.findByPhone(phoneNumber);
     if (!user) {
       this.log.debug('getByPhone -- user not found');
-      throw new NotFoundException();
+      throw new NotFoundException('user not found');
+    }
+    return user;
+  }
+
+  async getWithContactByPhone(phoneNumber: string): Promise<UserEntity> {
+    if (!phoneNumber) {
+      this.log.warn('getByPhone -- invalid argument(s)');
+      throw new InternalServerErrorException();
+    }
+    const user = await this.userRepository.findWithContactByPhone(phoneNumber);
+    if (!user) {
+      this.log.debug('getByPhone -- user not found');
+      throw new NotFoundException('user not found');
     }
     return user;
   }
@@ -69,27 +81,27 @@ export class UserService {
     return user;
   }
 
-  async get(user: UserEntity): Promise<UserEntity> {
-    this.log.debug('getProfile -- start');
-    if (!user) {
-      this.log.debug('getProfile -- internal server error');
-      throw new InternalServerErrorException();
-    }
+  // async get(user: UserEntity): Promise<UserEntity> {
+  //   this.log.debug('get -- start');
+  //   if (!user) {
+  //     this.log.debug('get -- internal server error');
+  //     throw new InternalServerErrorException();
+  //   }
 
-    const { id } = user;
-    if (!id) {
-      this.log.debug('getProfile -- internal server error');
-      throw new InternalServerErrorException();
-    }
+  //   const { id } = user;
+  //   if (!id) {
+  //     this.log.debug('get -- internal server error');
+  //     throw new InternalServerErrorException();
+  //   }
 
-    const entity = this.userRepository.findById(id);
-    if (!entity) {
-      this.log.debug('getProfile -- ');
-      throw new InternalServerErrorException();
-    }
-    this.log.debug('getProfile -- success');
-    return entity;
-  }
+  //   const entity = this.userRepository.findById(id);
+  //   if (!entity) {
+  //     this.log.debug('get -- ');
+  //     throw new InternalServerErrorException();
+  //   }
+  //   this.log.debug('get -- success');
+  //   return entity;
+  // }
 
   async update(user: UserEntity, dto: SaveUserDto): Promise<any> {
     this.log.debug('update -- start');
@@ -98,15 +110,15 @@ export class UserService {
       throw new InternalServerErrorException();
     }
 
-    const { username } = dto;
-    if (user.username !== username && (await this.usernameExists(username))) {
-      this.log.debug('update -- username already in use');
-      throw new ConflictException('Username already in use');
-    }
-    if (user.refferalCode && dto.refferalCode) {
-      this.log.debug('update -- refferal code exists, cannot be changed');
-      throw new ConflictException('Refferal code exists');
-    }
+    // const { username } = dto;
+    // if (user.contactInfo.username !== username && (await this.usernameExists(username))) {
+    //   this.log.debug('update -- username already in use');
+    //   throw new ConflictException('Username already in use');
+    // }
+    // if (user.refferalCode && dto.refferalCode) {
+    //   this.log.debug('update -- refferal code exists, cannot be changed');
+    //   throw new ConflictException('Refferal code exists');
+    // }
 
     let updatedEntity = { ...user, ...SaveUserDto.toEntity(dto) };
     updatedEntity = await this.userRepository.save(updatedEntity);

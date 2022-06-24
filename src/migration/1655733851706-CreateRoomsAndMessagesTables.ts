@@ -5,7 +5,7 @@ export class CreateRoomsAndMessagesTables1655733851706 implements MigrationInter
     await queryRunner.query(`
         CREATE TABLE rooms(
           id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-          "from" INT NOT NULL,
+          user_id INT REFERENCES users(id) NOT NULL,
           "to" INT NOT NULL,
           is_deleted BOOLEAN DEFAULT FALSE,
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -15,9 +15,7 @@ export class CreateRoomsAndMessagesTables1655733851706 implements MigrationInter
         CREATE TABLE messages(
           id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
           room_id INT REFERENCES rooms(id) NOT NULL,
-          message VARCHAR(65536) NOT NULL,
-          "from" INT NOT NULL,
-          "to" INT NOT NULL,
+          content VARCHAR(65536) NOT NULL,
           media_url VARCHAR(512),
           is_read BOOLEAN DEFAULT FALSE,
           deleted_by INT ARRAY[2],

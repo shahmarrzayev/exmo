@@ -1,4 +1,4 @@
-import { UserEntity } from './../../user/user.entity';
+import { UserEntity } from '../../user/entity/user.entity';
 import { MessageEntity } from './../entity/message.entity';
 import { SaveMessageDto } from './../dto/saveMessage.dto';
 import { MessageRepository } from './../repository/message.repository';
@@ -30,18 +30,18 @@ export class MessageService {
       throw new InternalServerErrorException('user not found');
     }
 
-    const { blockedList } = user || {};
-    if (blockedList && !blockedList.includes(dto.to)) {
-      this.log.debug('create -- you have blocked this user');
-      throw new InternalServerErrorException('you have blocked this user');
-    }
+    // const { blockedList } = user || {};
+    // if (blockedList && !blockedList.includes(dto.to)) {
+    //   this.log.debug('create -- you have blocked this user');
+    //   throw new InternalServerErrorException('you have blocked this user');
+    // }
 
-    const sendedUser = await this.userService.getById(dto.to);
-    const { blockedList: sendedUserBlockedList } = sendedUser || {};
-    if (sendedUserBlockedList && !sendedUserBlockedList.includes(dto.from)) {
-      this.log.debug('create -- this user has blocked you');
-      throw new InternalServerErrorException('this user has blocked you');
-    }
+    // const sendedUser = await this.userService.getById(dto.to);
+    // const { blockedList: sendedUserBlockedList } = sendedUser || {};
+    // if (sendedUserBlockedList && !sendedUserBlockedList.includes(dto.from)) {
+    //   this.log.debug('create -- this user has blocked you');
+    //   throw new InternalServerErrorException('this user has blocked you');
+    // }
 
     const { mediaUrl, message } = dto;
     if (!mediaUrl && !message) {

@@ -12,6 +12,7 @@ import { AuthMiddleware } from './module/auth/auth.middleware';
 import { RoleModule } from './module/role/role.module';
 import { TwilioModule } from 'nestjs-twilio';
 import { EConfig } from './common/config.enum';
+import { PostModule } from './module/post/post.module';
 
 @Module({
   imports: [
@@ -20,12 +21,13 @@ import { EConfig } from './common/config.enum';
     AuthModule,
     UserModule,
     RoleModule,
-    S3Module,
-    MessageModule,
-    TwilioModule.forRoot({
-      accountSid: getConfig(EConfig.TWILIO_ACCOUNT_SID),
-      authToken: getConfig(EConfig.TWILIO_AUTH_TOKEN),
-    }),
+    // S3Module,
+    // MessageModule,
+    // PostModule,
+    // TwilioModule.forRoot({
+    //   accountSid: getConfig(EConfig.TWILIO_ACCOUNT_SID),
+    //   authToken: getConfig(EConfig.TWILIO_AUTH_TOKEN),
+    // }),
   ],
   providers: [{ provide: APP_GUARD, useClass: PermissionsGuard }],
 })

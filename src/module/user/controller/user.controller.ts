@@ -1,4 +1,4 @@
-import { IRequest } from './../../auth/interfaces/request.interface';
+import { IRequest } from '../../auth/interfaces/request.interface';
 import { Body, Controller, Get, Post, Req } from '@nestjs/common';
 import { Permissions } from '../../auth/decorator/permission.decorator';
 import { EPermission } from '../../role/enum/permission.enum';
@@ -10,12 +10,12 @@ import { UserService } from '../user.service';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get('/')
-  @Permissions(EPermission.USER_READ)
-  async get(@Req() req: IRequest): Promise<UserDto> {
-    const user = await this.userService.get(req.user);
-    return UserDto.fromEntity(user);
-  }
+  // @Get('/')
+  // @Permissions(EPermission.USER_READ)
+  // async get(@Req() req: IRequest): Promise<UserDto> {
+  //   const user = await this.userService.get(req.user);
+  //   return UserDto.fromEntity(user);
+  // }
 
   @Post('/')
   @Permissions(EPermission.USER_WRITE)

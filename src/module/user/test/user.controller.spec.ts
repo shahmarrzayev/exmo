@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserController } from '../controller/user.public.controller';
+import { UserController } from '../controller/user.controller';
 import { SaveUserDto } from '../dto/saveUser.dto';
-import { UserEntity } from '../user.entity';
+import { UserEntity } from '../entity/user.entity';
 import { UserHelper } from '../user.helper';
-import { UserRepository } from '../user.repository';
+import { UserRepository } from '../repository/user.repository';
 import { UserService } from '../user.service';
 import httpMocks from 'node-mocks-http';
 

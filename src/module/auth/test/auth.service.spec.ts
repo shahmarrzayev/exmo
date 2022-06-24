@@ -1,4 +1,4 @@
-import { UserEntity } from './../../user/user.entity';
+import { UserEntity } from '../../user/entity/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from './../../user/user.service';
 import { AuthService } from './../auth.service';

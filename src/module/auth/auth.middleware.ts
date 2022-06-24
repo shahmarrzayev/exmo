@@ -4,7 +4,7 @@ import { ForbiddenException, Injectable, Logger, NestMiddleware } from '@nestjs/
 import { verify } from 'jsonwebtoken';
 import { Response, NextFunction } from 'express';
 import { UserService } from '../user/user.service';
-import { UserEntity } from '../user/user.entity';
+import { UserEntity } from '../user/entity/user.entity';
 import { getConfig } from '../../common/util';
 import { EConfig } from '../../common/config.enum';
 

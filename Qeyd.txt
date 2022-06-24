@@ -1,0 +1,5 @@
+1. login => response => contactInfo qayitsin.
+2. refferal_code => user_contact da olsun. Chunki firstName, lastName ... ile birlikde gonderilecek.
+3. Mobilden toplu phone_number, contact_first_name, contact_last_name gonderilecek. 
+   Hemin contactlar user-in contacts-ina update olunacaq.
+4. create room-da ilk mesaj room-a save olunmalidir.
