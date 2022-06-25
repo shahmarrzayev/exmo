@@ -1,13 +1,13 @@
 import { PostEntity } from 'src/module/post/post.entity';
 import { RoleEntity } from 'src/module/role/entity/role.entity';
-import { UserContactEntity } from '../entity/contact.entity';
+import { ContactEntity } from '../entity/contact.entity';
 import { UserEntity } from '../entity/user.entity';
 
 export class UserDto {
   id: number;
   phoneNumber: string;
-  contactInfo: UserContactEntity;
-  contacts: UserContactEntity[];
+  contactInfo: ContactEntity;
+  contacts: ContactEntity[];
   posts: PostEntity[];
   blockedList: UserEntity[];
   roles: RoleEntity[];
@@ -16,7 +16,7 @@ export class UserDto {
     if (!entity) return null;
     const dto = new UserDto();
     dto.id = entity.id;
-    dto.contactInfo = entity.contactInfo;
+    // dto.contactInfo = entity.contactInfo;
     dto.blockedList = entity.blockedList;
     return dto;
   }

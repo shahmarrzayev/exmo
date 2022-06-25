@@ -4,7 +4,7 @@ import { SaveUserDto } from '../dto/saveUser.dto';
 import { UserEntity } from '../entity/user.entity';
 import { UserHelper } from '../user.helper';
 import { UserRepository } from '../repository/user.repository';
-import { UserService } from '../user.service';
+import { UserService } from '../service/user.service';
 import httpMocks from 'node-mocks-http';
 
 describe('UserController', () => {

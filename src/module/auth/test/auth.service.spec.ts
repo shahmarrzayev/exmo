@@ -1,6 +1,6 @@
 import { UserEntity } from '../../user/entity/user.entity';
 import { JwtService } from '@nestjs/jwt';
-import { UserService } from './../../user/user.service';
+import { UserService } from '../../user/service/user.service';
 import { AuthService } from './../auth.service';
 import { Test } from '@nestjs/testing';
 import { AuthHelper } from '../auth.helper';

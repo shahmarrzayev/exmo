@@ -3,7 +3,7 @@ import { MessageEntity } from './../entity/message.entity';
 import { SaveMessageDto } from './../dto/saveMessage.dto';
 import { MessageRepository } from './../repository/message.repository';
 import { Injectable, Logger, InternalServerErrorException } from '@nestjs/common';
-import { UserService } from 'src/module/user/user.service';
+import { UserService } from 'src/module/user/service/user.service';
 import { encrypt } from 'src/common/cryption';
 import { RoomRepository } from '../repository/room.repository';
 

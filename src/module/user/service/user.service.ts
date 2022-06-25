@@ -4,11 +4,11 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { UserRepository } from './repository/user.repository';
+import { UserRepository } from '../repository/user.repository';
 
-import { UserHelper } from './user.helper';
-import { UserEntity } from './entity/user.entity';
-import { SaveUserDto } from './dto/saveUser.dto';
+import { UserHelper } from '../user.helper';
+import { UserEntity } from '../entity/user.entity';
+import { SaveUserDto } from '../dto/saveUser.dto';
 
 @Injectable()
 export class UserService {

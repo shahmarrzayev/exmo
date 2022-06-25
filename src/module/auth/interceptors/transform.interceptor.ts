@@ -7,6 +7,6 @@ export class TransformInterceptor implements NestInterceptor {
     const { statusCode } = context.switchToHttp().getResponse() || {};
     return next
       .handle()
-      .pipe(map((data) => ({ messages: [], error: null, statusCode, result: data })));
+      .pipe(map((data) => ({ messages: [], error: null, statusCode, result: data || {} })));
   }
 }

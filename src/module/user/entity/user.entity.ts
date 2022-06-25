@@ -12,7 +12,8 @@ import {
 } from 'typeorm';
 import { RoleEntity } from '../../role/entity/role.entity';
 import { PostEntity } from '../../post/post.entity';
-import { UserContactEntity } from './contact.entity';
+import { ContactEntity } from './contact.entity';
+import { StatusEntity } from './status.entity';
 
 @Entity('users')
 export class UserEntity {
@@ -30,9 +31,6 @@ export class UserEntity {
 
   @Column()
   longitude: number;
-
-  @Column({ name: 'refferal_code' })
-  refferalCode?: string;
 
   @Column({ name: 'phone_number' })
   phoneNumber: string;
@@ -60,22 +58,25 @@ export class UserEntity {
   roles: RoleEntity[];
 
   // Contact info - firstName, lastName, ...
-  @OneToOne(() => UserContactEntity, (userContact) => userContact.user)
-  @JoinColumn({ name: 'user_id' })
-  contactInfo: UserContactEntity;
+  @OneToOne(() => ContactEntity, (contact) => contact.user)
+  contactInfo: ContactEntity;
 
   // Contacts (users (friends))
-  @ManyToMany(() => UserContactEntity, (user) => user.user)
+  @ManyToMany(() => ContactEntity, (contact) => contact.user)
   @JoinTable({
-    name: 'user_contact_info',
+    name: 'users_contact_info',
     joinColumn: { name: 'user_id', referencedColumnName: 'id' },
     inverseJoinColumn: { name: 'contact_id', referencedColumnName: 'id' },
   })
-  contacts: UserContactEntity[];
+  contacts: ContactEntity[];
 
-  @OneToMany(() => PostEntity, (post) => post.user)
+  @OneToMany(() => PostEntity, (post) => post.userId)
   @JoinColumn({ name: 'user_id' })
   posts: PostEntity[];
+
+  @OneToMany(() => StatusEntity, (status) => status.userId)
+  @JoinColumn({ name: 'user_id' })
+  statuses: StatusEntity[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt?: Date;

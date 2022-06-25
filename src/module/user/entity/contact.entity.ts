@@ -10,8 +10,8 @@ import {
 import { UserEntity } from './user.entity';
 import { EGender } from '../user.enum';
 
-@Entity('users_contact_info')
-export class UserContactEntity {
+@Entity('contacts')
+export class ContactEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -20,6 +20,12 @@ export class UserContactEntity {
 
   @Column({ name: 'last_name' })
   lastName: string;
+
+  @Column({ name: 'contact_first_name' })
+  contactFirstName: string;
+
+  @Column({ name: 'contact_last_name' })
+  contactLastName: string;
 
   @Column()
   username: string;
@@ -33,16 +39,19 @@ export class UserContactEntity {
   @Column()
   gender: EGender;
 
+  @Column({ name: 'profile_image' })
+  profileImage: string;
+
+  @Column({ name: 'refferal_code' })
+  refferalCode: string;
+
   @OneToOne(() => UserEntity, (user) => user.contactInfo)
   @JoinColumn({ name: 'user_id' })
   user: UserEntity;
 
-  @Column()
-  image: string;
-
-  @CreateDateColumn()
+  @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 }

@@ -3,7 +3,7 @@ import { AuthHelper } from './auth.helper';
 import { ForbiddenException, Injectable, Logger, NestMiddleware } from '@nestjs/common';
 import { verify } from 'jsonwebtoken';
 import { Response, NextFunction } from 'express';
-import { UserService } from '../user/user.service';
+import { UserService } from '../user/service/user.service';
 import { UserEntity } from '../user/entity/user.entity';
 import { getConfig } from '../../common/util';
 import { EConfig } from '../../common/config.enum';

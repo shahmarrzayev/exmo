@@ -1,25 +1,27 @@
-import { UserContactEntity } from '../entity/contact.entity';
+import { ContactEntity } from '../entity/contact.entity';
 import { EGender } from '../user.enum';
 
 export class ContactDto {
   firstName: string;
   lastName: string;
+  contactFirstName: string;
+  contactLastName: string;
   username: string;
-  birthDate: Date;
-  lastSeen: Date;
+  birthDate: string;
+  lastSeen: string;
   gender: EGender;
-  image: string;
+  profileImage: string;
 
-  public static fromEntity(entity: UserContactEntity): ContactDto {
+  public static fromEntity(entity: ContactEntity): ContactDto {
     if (!entity) return null;
     const dto = new ContactDto();
     dto.firstName = entity.firstName;
     dto.lastName = entity.lastName;
     dto.username = entity.username;
-    dto.birthDate = entity.birthDate;
-    dto.lastSeen = entity.lastSeen;
+    dto.birthDate = entity.birthDate.toISOString();
+    dto.lastSeen = entity.lastSeen.toISOString();
     dto.gender = entity.gender;
-    dto.image = entity.image;
+    dto.profileImage = entity.profileImage;
     return dto;
   }
 }

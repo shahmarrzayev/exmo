@@ -18,7 +18,7 @@ export class PostEntity {
 
   @ManyToOne(() => UserEntity, (user) => user.posts)
   @JoinColumn({ name: 'user_id' })
-  user: UserEntity;
+  userId: number;
 
   @Column()
   title: string;
