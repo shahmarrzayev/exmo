@@ -9,11 +9,15 @@
 her defe max 5
 en suretli 3 at
 
-a1 > a2 > a3 
-b1 > b2 > b3
-c1 > c2 > c3
-d1 > d2 > d3
-e1 > e2 > e3
+a(1)
+
+
+
+   a1 > a2 > a3 
+   b1 > b2 > b3
+   c1 > c2 > c3
+   d1 > d2 > d3
+   e1 > e2 > e3
 
 5 5 5 5 5
 3 3 3 3 3

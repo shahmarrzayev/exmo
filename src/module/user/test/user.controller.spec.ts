@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from '../controller/user.controller';
-import { SaveUserDto } from '../dto/saveUser.dto';
+import { SaveUserDto } from '../dto/user/saveUser.dto';
 import { UserEntity } from '../entity/user.entity';
 import { UserHelper } from '../user.helper';
 import { UserRepository } from '../repository/user.repository';

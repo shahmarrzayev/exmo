@@ -1,5 +1,5 @@
-import { ContactEntity } from '../entity/contact.entity';
-import { EGender } from '../user.enum';
+import { ContactEntity } from './../../entity/contact.entity';
+import { EGender } from './../../user.enum';
 
 export class ContactDto {
   firstName: string;

@@ -1,6 +1,6 @@
-import { IsDate, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { ContactEntity } from '../entity/contact.entity';
-import { EGender } from '../user.enum';
+import { ContactEntity } from './../../entity/contact.entity';
+import { EGender } from './../../user.enum';
+import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class SaveContactDto {
   @IsString()
@@ -10,14 +10,6 @@ export class SaveContactDto {
   @IsString()
   @IsNotEmpty()
   lastName: string;
-
-  @IsString()
-  @IsOptional()
-  contactFirstName: string;
-
-  @IsString()
-  @IsOptional()
-  contactLastName: string;
 
   @IsString()
   @IsNotEmpty()
@@ -41,20 +33,18 @@ export class SaveContactDto {
 
   @IsString()
   @IsOptional()
-  refferralCode: string;
+  referralCode: string;
 
   public static toEntity(dto: SaveContactDto): ContactEntity {
     const entity = new ContactEntity();
     entity.firstName = dto.firstName;
     entity.lastName = dto.lastName;
-    entity.contactFirstName = dto.contactFirstName;
-    entity.contactLastName = dto.contactLastName;
     entity.username = dto.username;
     entity.birthDate = new Date(dto.birthDate);
     entity.lastSeen = new Date(dto.lastSeen);
     entity.gender = dto.gender;
     entity.profileImage = dto.profileImage;
-    entity.refferalCode = dto.refferralCode;
+    entity.referralCode = dto.referralCode;
     return entity;
   }
 }

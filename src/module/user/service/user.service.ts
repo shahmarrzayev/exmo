@@ -1,3 +1,4 @@
+import { AddManyContactsDto } from './../dto/user/addManyContacts.dto';
 import {
   Injectable,
   InternalServerErrorException,
@@ -8,38 +9,30 @@ import { UserRepository } from '../repository/user.repository';
 
 import { UserHelper } from '../user.helper';
 import { UserEntity } from '../entity/user.entity';
-import { SaveUserDto } from '../dto/saveUser.dto';
+import { SaveUserDto } from '../dto/user/saveUser.dto';
+import { ContactService } from './contact.service';
 
 @Injectable()
 export class UserService {
   constructor(
     private readonly userHelper: UserHelper,
     private readonly userRepository: UserRepository,
+    private readonly contactService: ContactService,
   ) {}
 
   private readonly log = new Logger(UserService.name);
 
-  async save(
-    phoneNumber: string,
-    verificationCode: string,
-    verificationCodeExpDate: Date,
-  ): Promise<UserEntity> {
-    this.log.debug('save -- start');
-    if (!phoneNumber || !verificationCode || !verificationCodeExpDate) {
-      this.log.warn('save -- invalid argument(s)');
-      throw new InternalServerErrorException('invalid argument(s)');
-    }
-
-    let entity = await this.userRepository.findByPhone(phoneNumber);
-    entity = { ...entity, phoneNumber, verificationCode, verificationCodeExpDate };
-
-    const savedUser = await this.userRepository.save(entity);
-    if (!savedUser) {
-      this.log.debug('save -- could not save user');
+  async getById(id: number): Promise<UserEntity> {
+    if (!id) {
+      this.log.warn('getById -- invalid argument(s)');
       throw new InternalServerErrorException();
     }
-    this.log.debug('save -- success');
-    return savedUser;
+    const user = await this.userRepository.findById(id);
+    if (!user) {
+      this.log.debug('getById -- user not found');
+      throw new NotFoundException();
+    }
+    return user;
   }
 
   async getByPhone(phoneNumber: string): Promise<UserEntity> {
@@ -68,57 +61,41 @@ export class UserService {
     return user;
   }
 
-  async getById(id: number): Promise<UserEntity> {
-    if (!id) {
-      this.log.warn('getById -- invalid argument(s)');
-      throw new InternalServerErrorException();
+  async addManyContacts(user: UserEntity, dto: AddManyContactsDto): Promise<UserEntity> {
+    this.log.debug('addManyContacts -- start');
+    if (!dto || !user) {
+      this.log.debug('addManyContacts -- invalid argument(s)');
+      throw new InternalServerErrorException('invalid argument(s)');
     }
-    const user = await this.userRepository.findById(id);
-    if (!user) {
-      this.log.debug('getById -- user not found');
-      throw new NotFoundException();
+
+    const users = await this.userRepository.findManyWithContactsByPhoneNumbers(dto.phoneNumbers);
+    console.log('users', users);
+    const usersIds: number[] = [1];
+
+    const contacts = await this.contactService.getManyByUsersIds(usersIds);
+    console.log('contacts -- ', contacts);
+    if (!contacts || !contacts.length) {
+      this.log.debug('addManyContacts -- no contacts found');
+      throw new InternalServerErrorException('no contacts found');
     }
-    return user;
+
+    // const entity = { ...user, contacts };
+    // const updatedUser = await this.userRepository.save(entity);
+    // console.log('updatedUser -- ', updatedUser);
+    // if (!updatedUser) {
+    //   this.log.debug('addManyContacts -- could not save user');
+    //   throw new InternalServerErrorException('could not save user');
+    // }
+    // this.log.debug('addManyContacts -- success');
+    return users.at(0);
   }
 
-  // async get(user: UserEntity): Promise<UserEntity> {
-  //   this.log.debug('get -- start');
-  //   if (!user) {
-  //     this.log.debug('get -- internal server error');
-  //     throw new InternalServerErrorException();
-  //   }
-
-  //   const { id } = user;
-  //   if (!id) {
-  //     this.log.debug('get -- internal server error');
-  //     throw new InternalServerErrorException();
-  //   }
-
-  //   const entity = this.userRepository.findById(id);
-  //   if (!entity) {
-  //     this.log.debug('get -- ');
-  //     throw new InternalServerErrorException();
-  //   }
-  //   this.log.debug('get -- success');
-  //   return entity;
-  // }
-
-  async update(user: UserEntity, dto: SaveUserDto): Promise<any> {
+  async update(user: UserEntity, dto: SaveUserDto): Promise<UserEntity> {
     this.log.debug('update -- start');
     if (!dto || !user) {
       this.log.debug('update -- invalid argument(s)');
       throw new InternalServerErrorException();
     }
-
-    // const { username } = dto;
-    // if (user.contactInfo.username !== username && (await this.usernameExists(username))) {
-    //   this.log.debug('update -- username already in use');
-    //   throw new ConflictException('Username already in use');
-    // }
-    // if (user.refferalCode && dto.refferalCode) {
-    //   this.log.debug('update -- refferal code exists, cannot be changed');
-    //   throw new ConflictException('Refferal code exists');
-    // }
 
     let updatedEntity = { ...user, ...SaveUserDto.toEntity(dto) };
     updatedEntity = await this.userRepository.save(updatedEntity);
@@ -130,8 +107,26 @@ export class UserService {
     return updatedEntity;
   }
 
-  async usernameExists(username: string): Promise<boolean> {
-    const exists = await this.userRepository.findByUsername(username);
-    return !!exists;
+  async save(
+    phoneNumber: string,
+    verificationCode: string,
+    verificationCodeExpDate: Date,
+  ): Promise<UserEntity> {
+    this.log.debug('save -- start');
+    if (!phoneNumber || !verificationCode || !verificationCodeExpDate) {
+      this.log.warn('save -- invalid argument(s)');
+      throw new InternalServerErrorException('invalid argument(s)');
+    }
+
+    let entity = await this.userRepository.findByPhone(phoneNumber);
+    entity = { ...entity, phoneNumber, verificationCode, verificationCodeExpDate };
+
+    const savedUser = await this.userRepository.save(entity);
+    if (!savedUser) {
+      this.log.debug('save -- could not save user');
+      throw new InternalServerErrorException();
+    }
+    this.log.debug('save -- success');
+    return savedUser;
   }
 }

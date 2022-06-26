@@ -1,4 +1,3 @@
-import { UserDto } from './../user/dto/user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/service/user.service';
 import {
@@ -12,6 +11,7 @@ import { getConfig } from '../../common/util';
 import { EConfig } from '../../common/config.enum';
 import { AuthHelper } from './auth.helper';
 import { InjectTwilio, TwilioClient } from 'nestjs-twilio';
+import { UserDto } from '../user/dto/user/user.dto';
 
 @Injectable()
 export class AuthService {

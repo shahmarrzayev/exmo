@@ -21,12 +21,6 @@ export class ContactEntity {
   @Column({ name: 'last_name' })
   lastName: string;
 
-  @Column({ name: 'contact_first_name' })
-  contactFirstName: string;
-
-  @Column({ name: 'contact_last_name' })
-  contactLastName: string;
-
   @Column()
   username: string;
 
@@ -42,8 +36,8 @@ export class ContactEntity {
   @Column({ name: 'profile_image' })
   profileImage: string;
 
-  @Column({ name: 'refferal_code' })
-  refferalCode: string;
+  @Column({ name: 'referral_code' })
+  referralCode: string;
 
   @OneToOne(() => UserEntity, (user) => user.contactInfo)
   @JoinColumn({ name: 'user_id' })

@@ -10,6 +10,17 @@ export class UserRepository extends GenericRepository {
     super();
   }
 
+  async findManyWithContactsByPhoneNumbers(phoneNumbers: string[]): Promise<UserEntity[]> {
+    if (!phoneNumbers || !phoneNumbers.length) return null;
+    return await this.runQuery(() =>
+      this.repository
+        .createQueryBuilder('user')
+        .leftJoinAndSelect('user.contact', 'contact')
+        .where('user.phone_number IN :phoneNumbers', { phoneNumbers })
+        .getMany(),
+    );
+  }
+
   async findById(id: number): Promise<UserEntity> {
     if (!id) return null;
     return await this.runQuery(() =>

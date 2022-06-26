@@ -24,4 +24,14 @@ export class ContactRepository extends GenericRepository {
         .getOne(),
     );
   }
+
+  async findAllByUsersIds(usersIds: number[]): Promise<ContactEntity[]> {
+    if (!usersIds || !usersIds.length) return null;
+    return await this.runQuery(() =>
+      this.repository
+        .createQueryBuilder('contact')
+        .where('contact.user_id IN (:...userIds)', { usersIds })
+        .getMany(),
+    );
+  }
 }

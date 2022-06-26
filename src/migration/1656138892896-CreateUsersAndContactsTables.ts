@@ -21,14 +21,12 @@ export class CreateUsersAndContactsTables1656138892896 implements MigrationInter
             user_id INT REFERENCES users(id) NOT NULL,
             first_name VARCHAR(255) NOT NULL,
             last_name VARCHAR(255) NOT NULL,
-            contact_first_name VARCHAR(255) NOT NULL,
-            contact_last_name VARCHAR(255) NOT NULL,
             username VARCHAR(255) NOT NULL,
             birth_date DATE NOT NULL,
             last_seen DATE NOT NULL,
             gender VARCHAR(255) NOT NULL,
             profile_image VARCHAR(255),
-            refferal_code VARCHAR(255),
+            referral_code VARCHAR(255),
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
