@@ -16,7 +16,7 @@ export class UserRepository extends GenericRepository {
       this.repository
         .createQueryBuilder('user')
         .leftJoinAndSelect('user.contact', 'contact')
-        .where('user.phone_number IN :phoneNumbers', { phoneNumbers })
+        .where('user.phone_number IN (:...phoneNumbers)', { phoneNumbers })
         .getMany(),
     );
   }
@@ -25,6 +25,20 @@ export class UserRepository extends GenericRepository {
     if (!id) return null;
     return await this.runQuery(() =>
       this.repository.createQueryBuilder('user').where('user.id = :id', { id }).getOne(),
+    );
+  }
+
+  async findExtendedById(id: number): Promise<UserEntity> {
+    if (!id) return null;
+    return await this.runQuery(() =>
+      this.repository
+        .createQueryBuilder('user')
+        .leftJoinAndSelect('user.contacts', 'contacts')
+        .leftJoinAndSelect('user.blockedList', 'users')
+        .leftJoinAndSelect('user.posts', 'posts')
+        .leftJoinAndSelect('user.stasuses', 'statuses')
+        .where('user.id = :id', { id })
+        .getOne(),
     );
   }
 

@@ -16,25 +16,25 @@ export class ContactService {
       this.log.debug('get -- invalid argument(s)');
       throw new InternalServerErrorException('invalid argument(s)');
     }
-    const contact = await this.contactRepository.findByUserId(user.id);
+    const contact = await this.contactRepository.findById(user.id);
     this.log.debug('get -- success');
     return contact;
   }
 
-  async getManyByUsersIds(userIds: number[]): Promise<ContactEntity[]> {
+  async getManyByIds(ids: number[]): Promise<ContactEntity[]> {
     this.log.debug('getAllByPhone -- start');
-    if (!userIds || !userIds.length) {
+    if (!ids || !ids.length) {
       this.log.debug('getAllByPhone -- invalid argument(s)');
       throw new InternalServerErrorException('invalid argument(s)');
     }
 
-    const contacts = await this.contactRepository.findAllByUsersIds(userIds);
+    const contacts = await this.contactRepository.findManyByIds(ids);
     if (!contacts || !contacts.length) {
       this.log.debug('getAllByPhone -- contacts not found');
       throw new InternalServerErrorException('contacts not found');
     }
     this.log.debug('getAllByPhone -- success');
-    return;
+    return contacts;
   }
 
   async save(dto: SaveContactDto, user: UserEntity): Promise<ContactEntity> {
@@ -46,7 +46,7 @@ export class ContactService {
 
     let entity: ContactEntity;
     if (await this.existsContact(user.id)) {
-      entity = await this.contactRepository.findByUserId(user.id);
+      entity = await this.contactRepository.findById(user.id);
     }
 
     if (entity?.referralCode && dto.referralCode) {
@@ -54,13 +54,14 @@ export class ContactService {
       throw new InternalServerErrorException('refferal code exists, cannot be changed');
     }
 
-    entity = { ...entity, ...SaveContactDto.toEntity(dto), user };
+    entity = { ...entity, ...SaveContactDto.toEntity(dto), id: user.id };
 
     const savedContact = await this.contactRepository.save(entity);
     if (!savedContact) {
       this.log.debug('create -- could not save contact');
       throw new InternalServerErrorException('could not save contact');
     }
+    console.log('savedContact', savedContact);
     this.log.debug('create -- success');
     return savedContact;
   }
@@ -71,7 +72,7 @@ export class ContactService {
       this.log.debug('existsContact -- invalid argument(s)');
       throw new InternalServerErrorException('invalid argument(s)');
     }
-    const exists = await this.contactRepository.findByUserId(userId);
+    const exists = await this.contactRepository.findById(userId);
     this.log.debug('existsContact -- success');
     return !!exists;
   }

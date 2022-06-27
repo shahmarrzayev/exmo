@@ -12,7 +12,7 @@ export class ContactController {
 
   @Post('/')
   @Permissions(EPermission.USER_WRITE)
-  async create(@Req() req: IRequest, @Body() dto: SaveContactDto): Promise<ContactDto> {
+  async save(@Req() req: IRequest, @Body() dto: SaveContactDto): Promise<ContactDto> {
     const contact = await this.contactService.save(dto, req.user);
     return ContactDto.fromEntity(contact);
   }

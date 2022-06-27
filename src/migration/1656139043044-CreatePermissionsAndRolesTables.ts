@@ -16,6 +16,12 @@ export class CreatePermissionsAndRolesTables1656139043044 implements MigrationIn
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
+
+        CREATE TABLE users_roles(
+            user_id INT REFERENCES users(id),
+            role_id INT REFERENCES roles(id),
+            PRIMARY KEY (user_id, role_id)
+        );
         
         CREATE TABLE roles_permissions(
             role_id INT REFERENCES roles(id),

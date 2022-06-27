@@ -15,23 +15,17 @@ export class ContactRepository extends GenericRepository {
     return await this.runQuery(() => this.repository.save(entity));
   }
 
-  async findByUserId(userId: number): Promise<ContactEntity> {
-    if (!userId) return null;
+  async findById(id: number): Promise<ContactEntity> {
+    if (!id) return null;
     return await this.runQuery(() =>
-      this.repository
-        .createQueryBuilder('contact')
-        .where('contact.user_id = :userId', { userId })
-        .getOne(),
+      this.repository.createQueryBuilder('contact').where('contact.id = :id', { id }).getOne(),
     );
   }
 
-  async findAllByUsersIds(usersIds: number[]): Promise<ContactEntity[]> {
-    if (!usersIds || !usersIds.length) return null;
+  async findManyByIds(ids: number[]): Promise<ContactEntity[]> {
+    if (!ids || !ids.length) return null;
     return await this.runQuery(() =>
-      this.repository
-        .createQueryBuilder('contact')
-        .where('contact.user_id IN (:...userIds)', { usersIds })
-        .getMany(),
+      this.repository.createQueryBuilder('contact').whereInIds(ids).getMany(),
     );
   }
 }

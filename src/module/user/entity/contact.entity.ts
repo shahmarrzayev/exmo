@@ -4,7 +4,7 @@ import {
   Entity,
   JoinColumn,
   OneToOne,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { UserEntity } from './user.entity';
@@ -12,7 +12,7 @@ import { EGender } from '../user.enum';
 
 @Entity('contacts')
 export class ContactEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()
   id: number;
 
   @Column({ name: 'first_name' })
@@ -39,8 +39,8 @@ export class ContactEntity {
   @Column({ name: 'referral_code' })
   referralCode: string;
 
-  @OneToOne(() => UserEntity, (user) => user.contactInfo)
-  @JoinColumn({ name: 'user_id' })
+  @OneToOne(() => UserEntity, (user) => user.contact)
+  @JoinColumn({ name: 'id' })
   user: UserEntity;
 
   @CreateDateColumn({ name: 'created_at' })

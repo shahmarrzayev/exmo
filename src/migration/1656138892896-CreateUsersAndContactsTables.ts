@@ -17,8 +17,7 @@ export class CreateUsersAndContactsTables1656138892896 implements MigrationInter
         );
 
         CREATE TABLE contacts(
-            id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-            user_id INT REFERENCES users(id) NOT NULL,
+            id INT PRIMARY KEY REFERENCES users(id),
             first_name VARCHAR(255) NOT NULL,
             last_name VARCHAR(255) NOT NULL,
             username VARCHAR(255) NOT NULL,
@@ -31,12 +30,6 @@ export class CreateUsersAndContactsTables1656138892896 implements MigrationInter
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
 
-        CREATE TABLE users_contacts(
-            user_id INT REFERENCES users(id),
-            contact_id INT REFERENCES contacts(id),
-            PRIMARY KEY (user_id, contact_id)
-        );
-
         CREATE TABLE statuses(
             id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
             user_id INT REFERENCES users(id),
@@ -44,6 +37,12 @@ export class CreateUsersAndContactsTables1656138892896 implements MigrationInter
             is_deleted BOOLEAN DEFAULT FALSE,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+
+        CREATE TABLE users_contacts(
+            user_id INT REFERENCES users(id),
+            contact_id INT REFERENCES contacts(id),
+            PRIMARY KEY (user_id, contact_id)
         );
     `);
   }

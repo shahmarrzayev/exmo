@@ -20,7 +20,7 @@ export class UserController {
 
   @Post('/')
   @Permissions(EPermission.USER_WRITE)
-  async save(@Req() req: IRequest, @Body() dto: SaveUserDto): Promise<UserDto> {
+  async update(@Req() req: IRequest, @Body() dto: SaveUserDto): Promise<UserDto> {
     const user = await this.userService.update(req.user, dto);
     return UserDto.fromEntity(user);
   }

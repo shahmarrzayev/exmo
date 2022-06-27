@@ -58,13 +58,14 @@ export class UserEntity {
   roles: RoleEntity[];
 
   // Contact info - firstName, lastName, ...
-  @OneToOne(() => ContactEntity, (contact) => contact.user)
-  contactInfo: ContactEntity;
+  @OneToOne(() => ContactEntity, (contact) => contact.id)
+  @JoinColumn({ name: 'id' })
+  contact: ContactEntity;
 
   // Contacts (users (friends))
-  @ManyToMany(() => ContactEntity, (contact) => contact.user)
+  @ManyToMany(() => ContactEntity, { eager: true })
   @JoinTable({
-    name: 'users_contact_info',
+    name: 'users_contacts',
     joinColumn: { name: 'user_id', referencedColumnName: 'id' },
     inverseJoinColumn: { name: 'contact_id', referencedColumnName: 'id' },
   })

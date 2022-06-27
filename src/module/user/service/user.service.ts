@@ -11,6 +11,7 @@ import { UserHelper } from '../user.helper';
 import { UserEntity } from '../entity/user.entity';
 import { SaveUserDto } from '../dto/user/saveUser.dto';
 import { ContactService } from './contact.service';
+import { EntityManager } from 'typeorm';
 
 @Injectable()
 export class UserService {
@@ -18,6 +19,7 @@ export class UserService {
     private readonly userHelper: UserHelper,
     private readonly userRepository: UserRepository,
     private readonly contactService: ContactService,
+    private readonly entityManager: EntityManager,
   ) {}
 
   private readonly log = new Logger(UserService.name);
@@ -69,25 +71,37 @@ export class UserService {
     }
 
     const users = await this.userRepository.findManyWithContactsByPhoneNumbers(dto.phoneNumbers);
-    console.log('users', users);
-    const usersIds: number[] = [1];
+    if (!users || !users.length) {
+      this.log.debug('addManyContacts -- no users found');
+      throw new InternalServerErrorException('no users found');
+    }
 
-    const contacts = await this.contactService.getManyByUsersIds(usersIds);
-    console.log('contacts -- ', contacts);
-    if (!contacts || !contacts.length) {
+    const addedUsersContacts = users.map((user) => user.contact);
+    if (!addedUsersContacts || !addedUsersContacts.length) {
       this.log.debug('addManyContacts -- no contacts found');
       throw new InternalServerErrorException('no contacts found');
     }
 
-    // const entity = { ...user, contacts };
-    // const updatedUser = await this.userRepository.save(entity);
-    // console.log('updatedUser -- ', updatedUser);
-    // if (!updatedUser) {
-    //   this.log.debug('addManyContacts -- could not save user');
-    //   throw new InternalServerErrorException('could not save user');
-    // }
-    // this.log.debug('addManyContacts -- success');
-    return users.at(0);
+    // const contacts = await this.contactService.getManyByIds(addedUsers.map((user) => user.id));
+    // console.log('contacts', contacts);
+    // console.log('addedUsersContacts', addedUsersContacts);
+    const entity = await this.userRepository.findById(user.id);
+    if (!entity) {
+      this.log.debug('addManyContacts -- user not found');
+      throw new InternalServerErrorException('user not found');
+    }
+    entity.contacts = entity.contacts
+      ? [...entity.contacts, ...addedUsersContacts]
+      : addedUsersContacts;
+
+    const updatedUser = await this.userRepository.save(user);
+    console.log('updatedUser', updatedUser);
+    if (!updatedUser) {
+      this.log.debug('addManyContacts -- could not save user');
+      throw new InternalServerErrorException('could not save user');
+    }
+    this.log.debug('addManyContacts -- success');
+    return updatedUser;
   }
 
   async update(user: UserEntity, dto: SaveUserDto): Promise<UserEntity> {
