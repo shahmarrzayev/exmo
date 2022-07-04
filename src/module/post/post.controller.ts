@@ -1,5 +1,4 @@
 import { Body, Controller, Delete, Get, Param, Post, Req } from '@nestjs/common';
-import { Permissions } from '../auth/decorator/permission.decorator';
 import { IRequest } from '../auth/interfaces/request.interface';
 import { EPermission } from '../role/enum/permission.enum';
 import { PostDto } from './dto/post.dto';
@@ -10,28 +9,24 @@ import { PostService } from './post.service';
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
-  @Permissions(EPermission.USER_WRITE)
   @Post('/')
   async create(@Req() req: IRequest, @Body() dto: SavePostDto): Promise<PostDto> {
     const post = await this.postService.create(dto, req.user?.id);
     return PostDto.fromEntity(post);
   }
 
-  @Permissions(EPermission.USER_READ)
   @Get('/:id')
   async getById(@Param('id') id: number): Promise<PostDto> {
     const post = await this.postService.getById(id);
     return PostDto.fromEntity(post);
   }
 
-  @Permissions(EPermission.USER_READ)
   @Get('/')
   async getAll(@Req() req: IRequest): Promise<PostDto[]> {
     const posts = await this.postService.getAll(req.user?.id);
     return posts.map(PostDto.fromEntity);
   }
 
-  @Permissions(EPermission.USER_WRITE)
   @Delete('/:id')
   async delete(@Req() req: IRequest, @Param('id') id: number): Promise<void> {
     await this.postService.delete(id, req.user?.id);
