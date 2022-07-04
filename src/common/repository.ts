@@ -1,11 +1,6 @@
 import { Logger } from '@nestjs/common';
 
 export class GenericRepository {
-  getSkip(page: number, perPage = 10): number {
-    if (!page || page === 1) return 0;
-    return page * perPage;
-  }
-
   async runQuery(query: any): Promise<any> {
     let result: any;
 
