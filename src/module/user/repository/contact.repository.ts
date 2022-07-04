@@ -24,8 +24,6 @@ export class ContactRepository extends GenericRepository {
 
   async findManyByIds(ids: number[]): Promise<ContactEntity[]> {
     if (!ids || !ids.length) return null;
-    return await this.runQuery(() =>
-      this.repository.createQueryBuilder('contact').whereInIds(ids).getMany(),
-    );
+    return await this.runQuery(() => this.repository.findByIds(ids));
   }
 }

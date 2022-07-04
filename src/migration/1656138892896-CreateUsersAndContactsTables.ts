@@ -17,7 +17,8 @@ export class CreateUsersAndContactsTables1656138892896 implements MigrationInter
         );
 
         CREATE TABLE contacts(
-            id INT PRIMARY KEY REFERENCES users(id),
+            id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+            user_id INT REFERENCES users(id) ON DELETE CASCADE,
             first_name VARCHAR(255) NOT NULL,
             last_name VARCHAR(255) NOT NULL,
             username VARCHAR(255) NOT NULL,

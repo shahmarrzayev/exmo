@@ -12,6 +12,8 @@ import { UserEntity } from '../entity/user.entity';
 import { SaveUserDto } from '../dto/user/saveUser.dto';
 import { ContactService } from './contact.service';
 import { EntityManager } from 'typeorm';
+import { ContactEntity } from '../entity/contact.entity';
+import { ContactRepository } from '../repository/contact.repository';
 
 @Injectable()
 export class UserService {
@@ -19,7 +21,7 @@ export class UserService {
     private readonly userHelper: UserHelper,
     private readonly userRepository: UserRepository,
     private readonly contactService: ContactService,
-    private readonly entityManager: EntityManager,
+    private readonly contactRepository: ContactRepository,
   ) {}
 
   private readonly log = new Logger(UserService.name);
@@ -76,26 +78,22 @@ export class UserService {
       throw new InternalServerErrorException('no users found');
     }
 
-    const addedUsersContacts = users.map((user) => user.contact);
-    if (!addedUsersContacts || !addedUsersContacts.length) {
-      this.log.debug('addManyContacts -- no contacts found');
-      throw new InternalServerErrorException('no contacts found');
-    }
+    // const addedUsersContacts = users.map((user) => user.contact);
+    // if (!addedUsersContacts || !addedUsersContacts.length) {
+    //   this.log.debug('addManyContacts -- no contacts found');
+    //   throw new InternalServerErrorException('no contacts found');
+    // }
 
-    // const contacts = await this.contactService.getManyByIds(addedUsers.map((user) => user.id));
-    // console.log('contacts', contacts);
-    // console.log('addedUsersContacts', addedUsersContacts);
+    const usersIds = users.map((user) => user.id);
     const entity = await this.userRepository.findById(user.id);
     if (!entity) {
       this.log.debug('addManyContacts -- user not found');
       throw new InternalServerErrorException('user not found');
     }
-    entity.contacts = entity.contacts
-      ? [...entity.contacts, ...addedUsersContacts]
-      : addedUsersContacts;
+
+    entity.contacts = await this.getContacts(usersIds);
 
     const updatedUser = await this.userRepository.save(user);
-    console.log('updatedUser', updatedUser);
     if (!updatedUser) {
       this.log.debug('addManyContacts -- could not save user');
       throw new InternalServerErrorException('could not save user');
@@ -142,5 +140,16 @@ export class UserService {
     }
     this.log.debug('save -- success');
     return savedUser;
+  }
+
+  private async getContacts(ids: number[]): Promise<ContactEntity[]> {
+    if (!Array.isArray(ids) || !ids.length) return [];
+
+    const contacts = await this.contactRepository.findManyByIds(ids);
+    if (!contacts || contacts.length !== ids.length) {
+      throw new NotFoundException('Permission not found');
+    }
+
+    return contacts;
   }
 }

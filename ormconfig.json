@@ -1,12 +1,16 @@
- {
+{
   "type": "postgres",
-  "host": "exmo-db.cezq3ilbquq6.us-east-1.rds.amazonaws.com",
+  "host": "abul.db.elephantsql.com",
   "port": 5432,
-  "username": "exmo",
-  "password": "exmoexmo",
-  "database": "exmo_db",
-  "entities": ["dist/**/*.entity{.ts,.js}"],
-  "migrations": ["dist/migration/*{.ts,.js}"],
+  "username": "xxhqysgk",
+  "password": "ZmRcG6HOxH7evjzoCJm0rkYSHFfDM8aE",
+  "database": "xxhqysgk",
+  "entities": [
+    "dist/**/*.entity{.ts,.js}"
+  ],
+  "migrations": [
+    "dist/migration/*{.ts,.js}"
+  ],
   "synchronize": false,
   "cli": {
     "migrationsDir": "src/migration"

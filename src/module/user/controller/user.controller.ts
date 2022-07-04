@@ -11,13 +11,6 @@ import { UserService } from '../service/user.service';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  // @Get('/')
-  // @Permissions(EPermission.USER_READ)
-  // async get(@Req() req: IRequest): Promise<UserDto> {
-  //   const user = await this.userService.get(req.user);
-  //   return UserD  to.fromEntity(user);
-  // }
-
   @Post('/')
   @Permissions(EPermission.USER_WRITE)
   async update(@Req() req: IRequest, @Body() dto: SaveUserDto): Promise<UserDto> {
